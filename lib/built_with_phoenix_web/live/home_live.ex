@@ -9,7 +9,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
   @impl LiveView
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-screen-lg pt-12 pb-32">
+    <div class="mx-auto min-w-0 max-w-screen-lg px-4 pt-12 pb-32">
       <.hero />
 
       <ul class="mt-12 flex flex-wrap justify-center">
@@ -37,10 +37,15 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
       </ul>
 
       <ul class="grid-fill-cols-[256px] mt-6 grid gap-4">
-        <li>
-          <.organization_card url="https://marko.ch" organization="marko" />
+        <li :for={organization <- @organizations} key={organization.id}>
+          <.organization_card
+            url={organization.url}
+            name={organization.name}
+            logo={organization.logo}
+            image={organization.image}
+          />
         </li>
-        <li>
+        <%!-- <li>
           <.organization_card url="https://electric-sql.com" organization="electric-sql" />
         </li>
         <li>
@@ -60,7 +65,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
         </li>
         <li>
           <.organization_card url="https://techschool.dev" organization="techschool" />
-        </li>
+        </li> --%>
       </ul>
 
       <.footer />
@@ -74,7 +79,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
      socket
      |> assign(:technology_id, nil)
      |> assign(:technologies, Ash.read!(Technology))
-     |> stream(:organizations, Ash.read!(Organization))
+     |> assign(:organizations, Ash.read!(Organization))
      |> assign_new(:current_user, fn -> nil end)}
   end
 

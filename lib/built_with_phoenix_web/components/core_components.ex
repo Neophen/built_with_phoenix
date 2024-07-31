@@ -24,8 +24,10 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   alias Phoenix.LiveView.JS
   import BuiltWithPhoenixWeb.Gettext
 
-  attr(:organization, :string, required: true)
+  attr(:name, :string, required: true)
   attr(:url, :string, required: true)
+  attr(:logo, :string, required: true)
+  attr(:image, :string, required: true)
 
   def organization_card(assigns) do
     ~H"""
@@ -33,15 +35,12 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       href={@url}
       class="group grid h-full w-full gap-4 rounded-xl border bg-white p-4 shadow transition-shadow hover:shadow-lg"
     >
-      <div class="flex h-8 shrink-0 items-center ">
-        <img src={"/images/organizations/#{@organization}_logo.png"} class="h-full w-auto" />
+      <div class="flex h-8 shrink-0 items-center gap-4">
+        <img src={@logo} class="h-full w-auto" />
+        <%= @name %>
       </div>
       <div class="flex items-center overflow-clip border">
-        <img
-          src={"/images/organizations/#{@organization}_bg.png"}
-          width="100%"
-          class="transition-transform group-hover:scale-110"
-        />
+        <img src={@image} width="100%" class="transition-transform group-hover:scale-110" />
       </div>
     </a>
     """
