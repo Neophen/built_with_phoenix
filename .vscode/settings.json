@@ -1,0 +1,48 @@
+{
+	"tailwindCSS.experimental.configFile": "assets/tailwind.config.js",
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"emmet.includeLanguages": {
+		"phoenix-heex": "html"
+	},
+	"cSpell.words": ["noreply", "Octafest", "typedstruct"],
+	"search.exclude": {
+		"**/.lexical": true,
+		"**/deps": true,
+		"**/_build": true,
+		"**/.elixir_ls": true,
+		"**/.git": true,
+		"**/*.code-search": true,
+		"**/bower_components": true,
+		"**/build/**": true,
+		"**/node_modules": true,
+		"priv/static/assets/*": true
+	},
+	"files.autoSave": "onFocusChange",
+	// Prettier
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": false,
+	"prettier.useEditorConfig": false,
+	"editor.rulers": [100],
+	"editor.wordWrapColumn": 100,
+	"[shellscript]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"editor.bracketPairColorization.enabled": true,
+	"[elixir]": {
+		"editor.language.colorizedBracketPairs": [
+			["{", "}"],
+			["[", "]"],
+			["(", ")"]
+		],
+		"editor.defaultFormatter": "lexical-lsp.lexical"
+	},
+	"[ignore]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	}
+}
