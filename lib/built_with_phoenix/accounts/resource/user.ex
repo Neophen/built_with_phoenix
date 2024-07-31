@@ -6,7 +6,7 @@ defmodule BuiltWithPhoenix.Accounts.Resource.User do
     domain: BuiltWithPhoenix.Accounts
 
   attributes do
-    uuid_primary_key :id
+    uuid_v7_primary_key :id
     attribute :email, :ci_string, allow_nil?: false, public?: true
     attribute :hashed_password, :string, allow_nil?: false, sensitive?: true
   end

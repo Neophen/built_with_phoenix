@@ -23,7 +23,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.FormComponent do
           label="Url"
         /><.input field={@form[:image_url]} type="text" label="Image url" />
 
-          <.button phx-disable-with="Saving...">Save Technology</.button>
+        <.button phx-disable-with="Saving...">Save Technology</.button>
       </.form>
     </div>
     """
