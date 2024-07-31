@@ -1,6 +1,8 @@
 defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
   use BuiltWithPhoenixWeb, :live_view
 
+  alias BuiltWithPhoenix.Organizations.Resource.Organization
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -22,20 +24,28 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
         <:col :let={{_id, organization}} label="Name"><%= organization.name %></:col>
 
         <:col :let={{_id, organization}} label="Url"><%= organization.url %></:col>
+        <:col :let={{_id, organization}} label="Status"><%= organization.status %></:col>
 
-        <:col :let={{_id, organization}} label="" row_class="flex gap-2 items-center w-min">
-          <div class="sr-only">
-            <.link navigate={~p"/organizations/#{organization}"}>Show</.link>
+        <:col :let={{_id, organization}} label="">
+          <div class="flex w-min items-center gap-2">
+            <div class="sr-only">
+              <.link navigate={~p"/organizations/#{organization}"}>Show</.link>
+            </div>
+
+            <.link patch={~p"/organizations/#{organization}/edit"}>Edit</.link>
+            <.button
+              phx-click={JS.push("approve", value: %{id: organization.id})}
+              data-confirm="Are you sure, you want to approve this?"
+            >
+              Approve
+            </.button>
+            <.button
+              phx-click={JS.push("delete", value: %{id: organization.id})}
+              data-confirm="Are you sure, you want to delete this?"
+            >
+              Delete
+            </.button>
           </div>
-
-          <.link patch={~p"/organizations/#{organization}/edit"}>Edit</.link>
-          <.button
-            color="danger"
-            phx-click={JS.push("delete", value: %{id: organization.id})}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.button>
         </:col>
       </.table>
     </div>
@@ -63,7 +73,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
      socket
      |> stream(
        :organizations,
-       Ash.read!(BuiltWithPhoenix.Organizations.Resource.Organization,
+       Ash.read!(Organization,
          actor: socket.assigns[:current_user]
        )
      )
@@ -80,9 +90,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
     |> assign(:page_title, "Edit Organization")
     |> assign(
       :organization,
-      Ash.get!(BuiltWithPhoenix.Organizations.Resource.Organization, id,
-        actor: socket.assigns.current_user
-      )
+      Ash.get!(Organization, id, actor: socket.assigns.current_user)
     )
   end
 
@@ -109,12 +117,21 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     organization =
-      Ash.get!(BuiltWithPhoenix.Organizations.Resource.Organization, id,
-        actor: socket.assigns.current_user
-      )
+      Ash.get!(Organization, id, actor: socket.assigns.current_user)
 
     Ash.destroy!(organization, actor: socket.assigns.current_user)
 
     {:noreply, stream_delete(socket, :organizations, organization)}
+  end
+
+  def handle_event("approve", %{"id" => id}, socket) do
+    # providing an initial ticket to close
+
+    Ash.get!(Organization, id, actor: socket.assigns.current_user)
+    |> Ash.Changeset.for_update(:approve)
+    |> Ash.update!()
+    |> dbg()
+
+    {:noreply, socket}
   end
 end

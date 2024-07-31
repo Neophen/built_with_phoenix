@@ -31,7 +31,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
     attribute :extra_sites, :string, public?: true
     attribute :author_name, :string, public?: true
     attribute :author_email, :string, public?: true
-    attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus
+    attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus, public?: true
   end
 
   relationships do
@@ -40,6 +40,11 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
       source_attribute_on_join_resource :organization_id
       destination_attribute_on_join_resource :technology_id
     end
+  end
+
+  code_interface do
+    define :active
+    define :approve
   end
 
   actions do
@@ -58,16 +63,19 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
         :author_email
       ]
 
-      argument :technologies, {:array, :uuid} do
+      argument :technologies, {:array, :uuid_v7} do
         allow_nil? false
       end
 
       change manage_relationship(:technologies, type: :append_and_remove)
     end
 
-    read :by_technology_id do
-      argument :id, :uuid, allow_nil?: false
-      filter expr(id == ^arg(:id))
+    update :approve do
+      change set_attribute(:status, :active)
+    end
+
+    read :active do
+      filter expr(status == :active)
     end
   end
 end

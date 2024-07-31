@@ -1,6 +1,8 @@
 defmodule BuiltWithPhoenixWeb.HomeLive do
   use BuiltWithPhoenixWeb, :live_view
 
+  require Ash.Query
+
   alias BuiltWithPhoenix.Organizations.Resource.Organization
   alias BuiltWithPhoenix.Organizations.Resource.Technology
 
@@ -63,9 +65,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
         <li>
           <.organization_card url="https://supabase.com" organization="supabase" />
         </li>
-        <li>
-          <.organization_card url="https://techschool.dev" organization="techschool" />
-        </li> --%>
+        --%>
       </ul>
 
       <.footer />
@@ -78,23 +78,42 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
     {:ok,
      socket
      |> assign(:technology_id, nil)
-     |> assign(:technologies, Ash.read!(Technology))
-     |> assign(:organizations, Ash.read!(Organization))
-     |> assign_new(:current_user, fn -> nil end)}
+     |> assign(
+       :technologies,
+       Technology
+       |> Ash.Query.sort([:name])
+       |> Ash.read!()
+     )
+     |> assign_organizations()}
   end
 
   @impl LiveView
   def handle_event("select-technology", %{"id" => id}, socket) do
     {:noreply,
      socket
-     |> assign(:technology_id, id)}
+     |> assign(:technology_id, id)
+     |> assign_organizations()}
   end
 
   def handle_event("remove-technology", _params, socket) do
     {:noreply,
      socket
-     |> assign(:technology_id, nil)}
+     |> assign(:technology_id, nil)
+     |> assign_organizations()}
   end
+
+  defp assign_organizations(%{assigns: %{technology_id: technology_id}} = socket) do
+    assign(socket, :organizations, active(technology_id))
+  end
+
+  def active(nil), do: Organization.active!()
+
+  def active(technology_id),
+    do:
+      Organization
+      |> Ash.Query.for_read(:active)
+      |> Ash.Query.filter(technologies.id == ^technology_id)
+      |> Ash.read!()
 
   defp footer(assigns) do
     ~H"""
