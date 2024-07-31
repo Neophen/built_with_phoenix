@@ -82,54 +82,7 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
 
         <div class="h-full border-t border-zinc-400 md:border-l"></div>
 
-        <aside>
-          <h2 class="text-xl font-extrabold leading-7 text-zinc-800">
-            What belongs here?
-          </h2>
-          <ul class="mt-10 grid gap-6">
-            <li>
-              <.p>
-                Companies and non-profits using Phoenix to do or support the work of their organization (whether that's "make profit" or "teach healthcare" or whatever else)
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                No packages or other code
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                No individual courses or books or other training resources
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                If it's a developer-focused SaaS, it needs to be large--think Fathom Analytics, not someone's passion side project
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                We have a bias against tools that are only targeted at Phoenix developers, because those tools won't add any impact to folks' understanding how Phoenix is used in the broader world
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                Agencies are only allowed if they also have products, and are here to show their products
-              </.p>
-            </li>
-            <hr class="border-zinc-400" />
-            <li>
-              <.p>
-                Marketing sites for individual developers or agencies aren't allowed as sites examples
-              </.p>
-            </li>
-          </ul>
-        </aside>
+        <.what_belongs_here />
       </div>
     </div>
     """
@@ -144,8 +97,18 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
        :technologies,
        Ash.read!(Technology) |> Enum.map(fn tech -> {tech.name, tech.id} end)
      )
-     |> allow_upload(:logo, accept: ["image/*"])
-     |> allow_upload(:image, accept: ["image/*"])}
+     |> allow_upload(:logo,
+       accept: ["image/*"],
+       auto_upload: true,
+       max_entries: 1,
+       external: &presign_upload/2
+     )
+     |> allow_upload(:image,
+       accept: ["image/*"],
+       auto_upload: true,
+       max_entries: 1,
+       external: &presign_upload/2
+     )}
   end
 
   @impl LiveView
@@ -187,22 +150,20 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
 
   defp error_to_string(:too_large), do: "Too large"
   defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  defp error_to_string(:external_client_failure), do: "External client failure"
+  defp error_to_string(_), do: "Something went wrong"
+
+  defp presign_upload(entry, %{assigns: %{uploads: uploads}} = socket) do
+    meta = S3Uploader.meta(entry, uploads)
+    IO.inspect(meta, label: "____meta")
+    {:ok, meta, socket}
+  end
 
   defp get_file(socket, upload_key) do
-    consume_uploaded_entries(socket, upload_key, fn %{path: path}, entry ->
-      default_name = "#{upload_key}.png"
-
-      dest =
-        Path.join(
-          Application.app_dir(:built_with_phoenix, "priv/static/uploads"),
-          "#{Path.basename(path)}-#{entry.client_name || default_name}"
-        )
-
-      # You will need to create `priv/static/uploads` for `File.cp!/2` to work.
-      File.cp!(path, dest)
-      {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+    consume_uploaded_entries(socket, upload_key, fn _, entry ->
+      {:ok, S3Uploader.entry_url(entry)}
     end)
-    |> Enum.at(0)
+    |> List.first()
   end
 
   attr :upload, :map, required: true
@@ -377,6 +338,59 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
     <h2 class="text-base font-semibold leading-7 text-zinc-800">
       <%= @text %>
     </h2>
+    """
+  end
+
+  defp what_belongs_here(assigns) do
+    ~H"""
+    <aside>
+      <h2 class="text-xl font-extrabold leading-7 text-zinc-800">
+        What belongs here?
+      </h2>
+      <ul class="mt-10 grid gap-6">
+        <li>
+          <.p>
+            Companies and non-profits using Phoenix to do or support the work of their organization (whether that's "make profit" or "teach healthcare" or whatever else)
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            No packages or other code
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            No individual courses or books or other training resources
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            If it's a developer-focused SaaS, it needs to be large--think Fathom Analytics, not someone's passion side project
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            We have a bias against tools that are only targeted at Phoenix developers, because those tools won't add any impact to folks' understanding how Phoenix is used in the broader world
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            Agencies are only allowed if they also have products, and are here to show their products
+          </.p>
+        </li>
+        <hr class="border-zinc-400" />
+        <li>
+          <.p>
+            Marketing sites for individual developers or agencies aren't allowed as sites examples
+          </.p>
+        </li>
+      </ul>
+    </aside>
     """
   end
 end
