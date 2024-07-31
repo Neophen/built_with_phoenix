@@ -3,3 +3,87 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+:root {
+	--selected: hsl(20, 97%, 62%);
+	--transition: 0.875s;
+	--bg: light-dark(white, black);
+	--intentful: light-dark(color-mix(in lch, canvas, canvasText 15%), black);
+	--ease: linear(
+		0 0%,
+		0.6832 7.89%,
+		0.9171 11.07%,
+		1.0251 12.99%,
+		1.1058 14.9%,
+		1.1619 16.86%,
+		1.1945 18.91%,
+		1.2024 20.02%,
+		1.2043 21.18%,
+		1.1907 23.72%,
+		1.1598 26.27%,
+		1.0604 32.59%,
+		1.0172 35.84%,
+		0.9839 39.49%,
+		0.967 43.26%,
+		0.9639 45.77%,
+		0.9661 48.59%,
+		0.9963 60.54%,
+		1.0054 67.42%,
+		1 100%
+	);
+}
+
+label.checkbox-label {
+	--active: 0;
+	--intent: 0;
+	--accent: color-mix(in lch, canvasText, canvas 25%);
+	--backdrop: light-dark(white, black);
+	background: color-mix(in lch, canvas, canvasText calc(var(--intent) * 10%));
+	color: var(--accent);
+	border-radius: 100px;
+	border: 1px solid color-mix(in lch, var(--accent), #0000 50%);
+	display: grid;
+	grid-template-columns: auto calc(var(--active) * 20px);
+	cursor: pointer;
+	align-items: center;
+	line-height: 1.25;
+	transition: color, grid-template-columns;
+	transition-duration: calc(var(--transition) * 0.5), var(--transition);
+	transition-timing-function: var(--ease);
+	position: relative;
+	outline: 0px solid color-mix(in lch, canvas, canvasText 85%);
+	outline-offset: 2px;
+}
+
+label.checkbox-label::after {
+	content: "";
+	opacity: var(--active, 0);
+	position: absolute;
+	inset: -1px;
+	border: 1px solid var(--selected);
+	background: color-mix(in lch, var(--selected), #0000 80%);
+	border-radius: 100px;
+	z-index: 2;
+	pointer-events: none;
+	transition: opacity var(--transition) var(--ease);
+}
+
+label.checkbox-label span::selection {
+	background: transparent;
+}
+
+label.checkbox-label:has(:focus-visible),
+label.checkbox-label:hover {
+	&:not(:has(:checked)) {
+		--intent: 1;
+	}
+}
+
+label.checkbox-label:has(:focus-visible) {
+	outline-width: 2px;
+}
+
+label.checkbox-label:has(:checked) {
+	--active: 1;
+	color: var(--selected);
+}
