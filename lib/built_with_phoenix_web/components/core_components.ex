@@ -1,4 +1,9 @@
 defmodule BuiltWithPhoenixWeb.CoreComponents do
+  use Phoenix.VerifiedRoutes,
+    endpoint: BuiltWithPhoenixWeb.Endpoint,
+    router: BuiltWithPhoenixWeb.Router,
+    statics: BuiltWithPhoenixWeb.static_paths()
+
   @moduledoc """
   Provides core UI components.
 
@@ -19,6 +24,85 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   alias Phoenix.LiveView.JS
   import BuiltWithPhoenixWeb.Gettext
 
+  attr(:organization, :string, required: true)
+  attr(:url, :string, required: true)
+
+  def organization_card(assigns) do
+    ~H"""
+    <a
+      href={@url}
+      class="group grid h-full w-full gap-4 rounded-xl border bg-white p-4 shadow transition-shadow hover:shadow-lg"
+    >
+      <div class="flex h-8 shrink-0 items-center ">
+        <img src={"/images/organizations/#{@organization}_logo.png"} class="h-full w-auto" />
+      </div>
+      <div class="flex items-center overflow-clip border">
+        <img
+          src={"/images/organizations/#{@organization}_bg.png"}
+          width="100%"
+          class="transition-transform group-hover:scale-110"
+        />
+      </div>
+    </a>
+    """
+  end
+
+  attr(:suggesting?, :boolean, default: false)
+
+  def hero(assigns) do
+    ~H"""
+    <div class="bg-white">
+      <div class="px-6 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-3xl font-bold tracking-tight text-zinc-800 sm:text-4xl">
+            Built with phoenix
+          </h2>
+          <.p class="mx-auto mt-6 max-w-xl">
+            A curated catalog of organizations using Phoenix
+          </.p>
+          <div class="mt-8 flex items-center justify-center gap-x-6">
+            <%= if @suggesting? do %>
+              <.link navigate={~p"/"} class="text-sm font-semibold leading-6 text-zinc-800">
+                About
+              </.link>
+            <% else %>
+              <a href="#about" class="text-sm font-semibold leading-6 text-zinc-800">
+                About
+              </a>
+            <% end %>
+            <%= if @suggesting? do %>
+              <button
+                type="button"
+                class="bg-primary-600 rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                Suggest <span aria-hidden="true">→</span>
+              </button>
+            <% else %>
+              <.link
+                navigate={~p"/suggest"}
+                class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              >
+                Suggest <span aria-hidden="true">→</span>
+              </.link>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  attr(:class, :string, default: "")
+  slot(:inner_block, required: true)
+
+  def p(assigns) do
+    ~H"""
+    <p class={["text-lg leading-8 text-gray-600", @class]}>
+      <%= render_slot(@inner_block) %>
+    </p>
+    """
+  end
+
   @doc """
   Renders a modal.
 
@@ -36,10 +120,10 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       </.modal>
 
   """
-  attr :id, :string, required: true
-  attr :show, :boolean, default: false
-  attr :on_cancel, JS, default: %JS{}
-  slot :inner_block, required: true
+  attr(:id, :string, required: true)
+  attr(:show, :boolean, default: false)
+  attr(:on_cancel, JS, default: %JS{})
+  slot(:inner_block, required: true)
 
   def modal(assigns) do
     ~H"""
@@ -97,13 +181,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <.flash kind={:info} flash={@flash} />
       <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
   """
-  attr :id, :string, doc: "the optional id of flash container"
-  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
-  attr :title, :string, default: nil
-  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
-  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
+  attr(:id, :string, doc: "the optional id of flash container")
+  attr(:flash, :map, default: %{}, doc: "the map of flash messages to display")
+  attr(:title, :string, default: nil)
+  attr(:kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup")
+  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
 
-  slot :inner_block, doc: "the optional inner block that renders the flash message"
+  slot(:inner_block, doc: "the optional inner block that renders the flash message")
 
   def flash(assigns) do
     assigns = assign_new(assigns, :id, fn -> "flash-#{assigns.kind}" end)
@@ -115,9 +199,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class={[
-        "fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
+        "fixed top-2 right-2 z-50 mr-2 w-80 rounded-lg p-3 ring-1 sm:w-96",
+        @kind == :info && "bg-emerald-50 fill-cyan-900 text-emerald-800 ring-emerald-500",
+        @kind == :error && "bg-rose-50 fill-rose-900 text-rose-900 shadow-md ring-rose-500"
       ]}
       {@rest}
     >
@@ -141,8 +225,8 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
 
       <.flash_group flash={@flash} />
   """
-  attr :flash, :map, required: true, doc: "the map of flash messages"
-  attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
+  attr(:flash, :map, required: true, doc: "the map of flash messages")
+  attr(:id, :string, default: "flash-group", doc: "the optional id of flash container")
 
   def flash_group(assigns) do
     ~H"""
@@ -189,15 +273,16 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         </:actions>
       </.simple_form>
   """
-  attr :for, :any, required: true, doc: "the data structure for the form"
-  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+  attr(:for, :any, required: true, doc: "the data structure for the form")
+  attr(:as, :any, default: nil, doc: "the server side parameter to collect all input under")
 
-  attr :rest, :global,
+  attr(:rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target multipart),
     doc: "the arbitrary HTML attributes to apply to the form tag"
+  )
 
-  slot :inner_block, required: true
-  slot :actions, doc: "the slot for form actions, such as a submit button"
+  slot(:inner_block, required: true)
+  slot(:actions, doc: "the slot for form actions, such as a submit button")
 
   def simple_form(assigns) do
     ~H"""
@@ -220,18 +305,18 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <.button>Send!</.button>
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
-  attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr(:type, :string, default: nil)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global, include: ~w(disabled form name value))
 
-  slot :inner_block, required: true
+  slot(:inner_block, required: true)
 
   def button(assigns) do
     ~H"""
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
+        "rounded-lg bg-zinc-900 px-3 py-2 hover:bg-zinc-700 phx-submit-loading:opacity-75",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}
@@ -268,28 +353,31 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <.input field={@form[:email]} type="email" />
       <.input name="my-input" errors={["oh no!"]} />
   """
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :label, :string, default: nil
-  attr :value, :any
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:label, :string, default: nil)
+  attr(:value, :any)
 
-  attr :type, :string,
+  attr(:type, :string,
     default: "text",
-    values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+    values: ~w(checkbox checkgroup color date datetime-local email file month number password
+                   range search select tel text textarea time url week)
+  )
 
-  attr :field, Phoenix.HTML.FormField,
+  attr(:field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
+  )
 
-  attr :errors, :list, default: []
-  attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
-  attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
-  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+  attr(:errors, :list, default: [])
+  attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
+  attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
+  attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")
+  attr(:multiple, :boolean, default: false, doc: "the multiple flag for select inputs")
 
-  attr :rest, :global,
+  attr(:rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
-                multiple pattern placeholder readonly required rows size step)
+                    multiple pattern placeholder readonly required rows size step)
+  )
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
@@ -355,12 +443,66 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem]",
+          "min-h-[6rem] mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "checkgroup"} = assigns) do
+    assigns =
+      assigns
+      |> assign_new(:checked, fn ->
+        case assigns.value do
+          value when is_binary(value) -> [value]
+          value when is_list(value) -> value
+          _ -> []
+        end
+        |> Enum.map(&to_string/1)
+      end)
+
+    ~H"""
+    <div class="text-sm">
+      <.label :if={@label}><%= @label %></.label>
+      <input type="hidden" name={@name} value="" />
+      <ul class="duration-[--transition] gap-[1ch] mt-2 flex flex-wrap transition-all">
+        <li :for={{label, value} <- @options} key={value}>
+          <label for={"#{@name}-#{value}"} class="checkbox-label px-4 py-2">
+            <span class="relative flex h-full items-center">
+              <%= label %>
+            </span>
+            <span class="relative flex h-full items-center">
+              <svg
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="left-[0.75ch] duration-[--transition] ease-[--ease] opacity-[--active,0] absolute w-full transition-opacity"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <input
+              type="checkbox"
+              id={"#{@name}-#{value}"}
+              name={@name <> "[]"}
+              value={value}
+              checked={to_string(value) in @checked}
+              {@rest}
+              class="sr-only"
+            />
+          </label>
+        </li>
+      </ul>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -391,12 +533,12 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   @doc """
   Renders a label.
   """
-  attr :for, :string, default: nil
-  slot :inner_block, required: true
+  attr(:for, :string, default: nil)
+  slot(:inner_block, required: true)
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="block text-sm font-medium leading-6 text-zinc-800">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -405,7 +547,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   @doc """
   Generates a generic error message.
   """
-  slot :inner_block, required: true
+  slot(:inner_block, required: true)
 
   def error(assigns) do
     ~H"""
@@ -419,11 +561,11 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   @doc """
   Renders a header with title.
   """
-  attr :class, :string, default: nil
+  attr(:class, :string, default: nil)
 
-  slot :inner_block, required: true
-  slot :subtitle
-  slot :actions
+  slot(:inner_block, required: true)
+  slot(:subtitle)
+  slot(:actions)
 
   def header(assigns) do
     ~H"""
@@ -451,20 +593,21 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         <:col :let={user} label="username"><%= user.username %></:col>
       </.table>
   """
-  attr :id, :string, required: true
-  attr :rows, :list, required: true
-  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+  attr(:id, :string, required: true)
+  attr(:rows, :list, required: true)
+  attr(:row_id, :any, default: nil, doc: "the function for generating the row id")
+  attr(:row_click, :any, default: nil, doc: "the function for handling phx-click on each row")
 
-  attr :row_item, :any,
+  attr(:row_item, :any,
     default: &Function.identity/1,
     doc: "the function for mapping each row before calling the :col and :action slots"
+  )
 
   slot :col, required: true do
-    attr :label, :string
+    attr(:label, :string)
   end
 
-  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot(:action, doc: "the slot for showing user actions in the last table column")
 
   def table(assigns) do
     assigns =
@@ -475,9 +618,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
       <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
+        <thead class="text-left text-sm leading-6 text-zinc-500">
           <tr>
-            <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal"><%= col[:label] %></th>
+            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
             <th :if={@action != []} class="relative p-0 pb-4">
               <span class="sr-only"><%= gettext("Actions") %></span>
             </th>
@@ -530,7 +673,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       </.list>
   """
   slot :item, required: true do
-    attr :title, :string, required: true
+    attr(:title, :string, required: true)
   end
 
   def list(assigns) do
@@ -553,8 +696,8 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
 
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
-  attr :navigate, :any, required: true
-  slot :inner_block, required: true
+  attr(:navigate, :any, required: true)
+  slot(:inner_block, required: true)
 
   def back(assigns) do
     ~H"""
@@ -588,12 +731,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <.icon name="hero-x-mark-solid" />
       <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
   """
-  attr :name, :string, required: true
-  attr :class, :string, default: nil
+  attr(:name, :string, required: true)
+  attr(:class, :string, default: nil)
+  attr(:style, :string, default: nil)
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={[@name, @class]} style={@style} />
     """
   end
 

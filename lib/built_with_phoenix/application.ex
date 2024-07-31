@@ -10,13 +10,15 @@ defmodule BuiltWithPhoenix.Application do
     children = [
       BuiltWithPhoenixWeb.Telemetry,
       BuiltWithPhoenix.Repo,
-      {DNSCluster, query: Application.get_env(:built_with_phoenix, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:built_with_phoenix, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: BuiltWithPhoenix.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: BuiltWithPhoenix.Finch},
       # Start a worker by calling: BuiltWithPhoenix.Worker.start_link(arg)
       # {BuiltWithPhoenix.Worker, arg},
       # Start to serve requests, typically the last entry
+      {AshAuthentication.Supervisor, otp_app: :built_with_phoenix},
       BuiltWithPhoenixWeb.Endpoint
     ]
 
