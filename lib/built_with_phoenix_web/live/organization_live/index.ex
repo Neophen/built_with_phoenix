@@ -40,10 +40,10 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
               Approve
             </.button>
             <.button
-              phx-click={JS.push("delete", value: %{id: organization.id})}
-              data-confirm="Are you sure, you want to delete this?"
+              phx-click={JS.push("decline", value: %{id: organization.id})}
+              data-confirm="Are you sure, you want to decline this?"
             >
-              Delete
+              Decline
             </.button>
           </div>
         </:col>
@@ -115,13 +115,12 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    organization =
-      Ash.get!(Organization, id, actor: socket.assigns.current_user)
+  def handle_event("decline", %{"id" => id}, socket) do
+    Ash.get!(Organization, id, actor: socket.assigns.current_user)
+    |> Ash.Changeset.for_update(:decline)
+    |> Ash.update!()
 
-    Ash.destroy!(organization, actor: socket.assigns.current_user)
-
-    {:noreply, stream_delete(socket, :organizations, organization)}
+    {:noreply, socket}
   end
 
   def handle_event("approve", %{"id" => id}, socket) do
@@ -130,7 +129,6 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
     Ash.get!(Organization, id, actor: socket.assigns.current_user)
     |> Ash.Changeset.for_update(:approve)
     |> Ash.update!()
-    |> dbg()
 
     {:noreply, socket}
   end

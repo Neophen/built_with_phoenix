@@ -74,6 +74,10 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
       change set_attribute(:status, :active)
     end
 
+    update :decline do
+      change set_attribute(:status, :declined)
+    end
+
     read :active do
       filter expr(status == :active)
     end

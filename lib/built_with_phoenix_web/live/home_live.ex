@@ -47,25 +47,6 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
             image={organization.image}
           />
         </li>
-        <%!-- <li>
-          <.organization_card url="https://electric-sql.com" organization="electric-sql" />
-        </li>
-        <li>
-          <.organization_card url="https://www.liveflow.io" organization="liveflow" />
-        </li>
-        <li>
-          <.organization_card url="https://liveroom.app" organization="liveroom" />
-        </li>
-        <li>
-          <.organization_card url="https://remote.com" organization="remote" />
-        </li>
-        <li>
-          <.organization_card url="https://savvycal.com" organization="savvycal" />
-        </li>
-        <li>
-          <.organization_card url="https://supabase.com" organization="supabase" />
-        </li>
-        --%>
       </ul>
 
       <.footer />
