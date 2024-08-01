@@ -10,7 +10,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
       <.header>
         Listing Organizations
         <:actions>
-          <.link patch={~p"/organizations/new"}>
+          <.link patch={~p"/admin/organizations/new"}>
             <.button>New Organization</.button>
           </.link>
         </:actions>
@@ -19,7 +19,9 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
       <.table
         id="organizations"
         rows={@streams.organizations}
-        row_click={fn {_id, organization} -> JS.navigate(~p"/organizations/#{organization}") end}
+        row_click={
+          fn {_id, organization} -> JS.navigate(~p"/admin/organizations/#{organization}") end
+        }
       >
         <:col :let={{_id, organization}} label="Name"><%= organization.name %></:col>
 
@@ -29,10 +31,10 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
         <:col :let={{_id, organization}} label="">
           <div class="flex w-min items-center gap-2">
             <div class="sr-only">
-              <.link navigate={~p"/organizations/#{organization}"}>Show</.link>
+              <.link navigate={~p"/admin/organizations/#{organization}"}>Show</.link>
             </div>
 
-            <.link patch={~p"/organizations/#{organization}/edit"}>Edit</.link>
+            <.link patch={~p"/admin/organizations/#{organization}/edit"}>Edit</.link>
             <.button
               phx-click={JS.push("approve", value: %{id: organization.id})}
               data-confirm="Are you sure, you want to approve this?"
@@ -52,7 +54,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
     <.modal
       :if={@live_action in [:new, :edit]}
       id="organization-modal"
-      on_cancel={JS.patch(~p"/organizations")}
+      on_cancel={JS.patch(~p"/admin/organizations")}
     >
       <.live_component
         module={BuiltWithPhoenixWeb.OrganizationLive.FormComponent}
@@ -61,7 +63,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
         current_user={@current_user}
         action={@live_action}
         organization={@organization}
-        patch={~p"/organizations"}
+        patch={~p"/admin/organizations"}
       />
     </.modal>
     """

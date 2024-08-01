@@ -9,7 +9,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Show do
       <:subtitle>This is a technology record from your database.</:subtitle>
 
       <:actions>
-        <.link patch={~p"/technologies/#{@technology}/show/edit"} phx-click={JS.push_focus()}>
+        <.link patch={~p"/admin/technologies/#{@technology}/show/edit"} phx-click={JS.push_focus()}>
           <.button>Edit technology</.button>
         </.link>
       </:actions>
@@ -25,13 +25,13 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Show do
       <:item title="Image url"><%= @technology.image_url %></:item>
     </.list>
 
-    <.back navigate={~p"/technologies"}>Back to technologies</.back>
+    <.back navigate={~p"/admin/technologies"}>Back to technologies</.back>
 
     <.modal
       :if={@live_action == :edit}
       id="technology-modal"
       show
-      on_cancel={JS.patch(~p"/technologies/#{@technology}")}
+      on_cancel={JS.patch(~p"/admin/technologies/#{@technology}")}
     >
       <.live_component
         module={BuiltWithPhoenixWeb.TechnologyLive.FormComponent}
@@ -40,7 +40,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Show do
         action={@live_action}
         current_user={@current_user}
         technology={@technology}
-        patch={~p"/technologies/#{@technology}"}
+        patch={~p"/admin/technologies/#{@technology}"}
       />
     </.modal>
     """

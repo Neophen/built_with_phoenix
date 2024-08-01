@@ -24,6 +24,7 @@ defmodule BuiltWithPhoenixWeb.Router do
 
     live "/", HomeLive
     live "/suggest", SuggestLive
+    live "/organizations/:id", ShowOrganizationLive
 
     # add these lines -->
     # Leave out `register_path` and `reset_path` if you don't want to support
@@ -41,19 +42,19 @@ defmodule BuiltWithPhoenixWeb.Router do
 
     ash_authentication_live_session :authentication_required,
       on_mount: {LiveUserAuth, :live_user_required} do
-      live "/technologies", TechnologyLive.Index, :index
-      live "/technologies/new", TechnologyLive.Index, :new
-      live "/technologies/:id/edit", TechnologyLive.Index, :edit
+      live "/admin/technologies", TechnologyLive.Index, :index
+      live "/admin/technologies/new", TechnologyLive.Index, :new
+      live "/admin/technologies/:id/edit", TechnologyLive.Index, :edit
 
-      live "/technologies/:id", TechnologyLive.Show, :show
-      live "/technologies/:id/show/edit", TechnologyLive.Show, :edit
+      live "/admin/technologies/:id", TechnologyLive.Show, :show
+      live "/admin/technologies/:id/show/edit", TechnologyLive.Show, :edit
 
-      live "/organizations", OrganizationLive.Index, :index
-      live "/organizations/new", OrganizationLive.Index, :new
-      live "/organizations/:id/edit", OrganizationLive.Index, :edit
+      live "/admin/organizations", OrganizationLive.Index, :index
+      live "/admin/organizations/new", OrganizationLive.Index, :new
+      live "/admin/organizations/:id/edit", OrganizationLive.Index, :edit
 
-      live "/organizations/:id", OrganizationLive.Show, :show
-      live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
+      live "/admin/organizations/:id", OrganizationLive.Show, :show
+      live "/admin/organizations/:id/show/edit", OrganizationLive.Show, :edit
     end
   end
 

@@ -35,9 +35,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.FormComponent do
           label="Author name"
         /><.input field={@form[:author_email]} type="text" label="Author email" />
 
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Organization</.button>
-        </:actions>
+        <.button phx-disable-with="Saving...">Save Organization</.button>
       </.form>
     </div>
     """

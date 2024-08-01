@@ -7,7 +7,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
     <.header>
       Listing Technologies
       <:actions>
-        <.link patch={~p"/technologies/new"}>
+        <.link patch={~p"/admin/technologies/new"}>
           <.button>New Technology</.button>
         </.link>
       </:actions>
@@ -16,7 +16,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
     <.table
       id="technologies"
       rows={@streams.technologies}
-      row_click={fn {_id, technology} -> JS.navigate(~p"/technologies/#{technology}") end}
+      row_click={fn {_id, technology} -> JS.navigate(~p"/admin/technologies/#{technology}") end}
     >
       <:col :let={{_id, technology}} label="Id"><%= technology.id %></:col>
 
@@ -28,10 +28,10 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
 
       <:action :let={{_id, technology}}>
         <div class="sr-only">
-          <.link navigate={~p"/technologies/#{technology}"}>Show</.link>
+          <.link navigate={~p"/admin/technologies/#{technology}"}>Show</.link>
         </div>
 
-        <.link patch={~p"/technologies/#{technology}/edit"}>Edit</.link>
+        <.link patch={~p"/admin/technologies/#{technology}/edit"}>Edit</.link>
       </:action>
 
       <:action :let={{id, technology}}>
@@ -48,7 +48,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
       :if={@live_action in [:new, :edit]}
       id="technology-modal"
       show
-      on_cancel={JS.patch(~p"/technologies")}
+      on_cancel={JS.patch(~p"/admin/technologies")}
     >
       <.live_component
         module={BuiltWithPhoenixWeb.TechnologyLive.FormComponent}
@@ -57,7 +57,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
         current_user={@current_user}
         action={@live_action}
         technology={@technology}
-        patch={~p"/technologies"}
+        patch={~p"/admin/technologies"}
       />
     </.modal>
     """

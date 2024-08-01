@@ -9,81 +9,72 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
   @impl LiveView
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-screen-lg pt-12 pb-32">
-      <.hero suggesting? />
+    <div class="mx-8 mt-12 grid gap-12 md:grid-cols-[1fr_1px_256px]">
+      <div class="grid gap-10">
+        <.text_header>
+          Suggest an organization
+        </.text_header>
 
-      <div class="mx-8 mt-12 grid gap-12 md:grid-cols-[1fr_1px_256px]">
-        <div class="grid gap-10">
-          <h2 class="text-xl font-extrabold leading-7 text-zinc-800">
-            Suggest an organization
-          </h2>
+        <.form
+          for={@form}
+          id="organization-form"
+          phx-change="validate"
+          phx-submit="save"
+          class="min-w-0 grid gap-y-8"
+        >
+          <.section title="Tell us about the Organization">
+            <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
+            <.input
+              field={@form[:url]}
+              label="Organization url"
+              required
+              placeholder="https://themykolas.com"
+            />
 
-          <.form
-            for={@form}
-            id="organization-form"
-            phx-change="validate"
-            phx-submit="save"
-            class="min-w-0 grid gap-y-8"
-          >
-            <.section title="Tell us about the Organization">
-              <.input
-                field={@form[:name]}
-                label="Organization name"
-                required
-                placeholder="The Mykolas"
-              />
-              <.input
-                field={@form[:url]}
-                label="Organization url"
-                required
-                placeholder="https://themykolas.com"
-              />
+            <.logo_input id="logo" upload={@uploads.logo} />
+            <.image_input id="image" upload={@uploads.image} />
+          </.section>
 
-              <.logo_input id="logo" upload={@uploads.logo} />
-              <.image_input id="image" upload={@uploads.image} />
-            </.section>
-
-            <.section title="How do you know they use Phoenix Framework?">
-              <div class="grid-fit-cols-[256px] grid gap-4">
-                <.input
-                  type="textarea"
-                  field={@form[:usage_public]}
-                  label="Public"
-                  placeholder="This information will be shared publicly"
-                  errors={["if this information can safely be shared publicly"]}
-                />
-                <.input
-                  type="textarea"
-                  field={@form[:usage_private]}
-                  label="Private"
-                  placeholder="This information will not be shared publicly"
-                  description="if this information cannot safely be shared publicly"
-                />
-              </div>
-            </.section>
-            <.section title="What sites/microsites/apps specifically use Phoenix? (new line for each URL)">
+          <.section title="How do you know they use Phoenix Framework?">
+            <div class="grid-fit-cols-[256px] grid gap-4">
               <.input
                 type="textarea"
-                field={@form[:extra_sites]}
-                label="Sites"
-                placeholder="https://themykolas.com"
+                field={@form[:usage_public]}
+                label="Public"
+                placeholder="This information will be shared publicly"
               />
-            </.section>
-            <.section title="What technologies are they using?">
-              <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
-            </.section>
-            <.section title="Tell us about yourself">
-              <.input field={@form[:author_name]} label="Your name" placeholder="Firstname Lastname" />
-              <.input field={@form[:author_email]} label="Your email" placeholder="you@awesome.com" />
-            </.section>
-            <.button type="submit" phx-disable-with="Saving...">Suggest Organization</.button>
-          </.form>
-        </div>
-
-        <div class="h-full border-t border-zinc-400 md:border-l"></div>
-
-        <.what_belongs_here />
+              <%!-- errors={["if this information can safely be shared publicly"]} --%>
+              <.input
+                type="textarea"
+                field={@form[:usage_private]}
+                label="Private"
+                placeholder="This information will not be shared publicly"
+              />
+              <%!-- description="if this information cannot safely be shared publicly" --%>
+            </div>
+          </.section>
+          <.section title="What sites/microsites/apps specifically use Phoenix? (new line for each URL)">
+            <.input
+              type="textarea"
+              field={@form[:extra_sites]}
+              label="Sites"
+              placeholder="https://themykolas.com"
+            />
+          </.section>
+          <.section title="What technologies are they using?">
+            <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
+          </.section>
+          <.section title="Tell us about yourself">
+            <.input field={@form[:author_name]} label="Your name" placeholder="Firstname Lastname" />
+            <.input field={@form[:author_email]} label="Your email" placeholder="you@awesome.com" />
+          </.section>
+          <.button type="submit" phx-disable-with="Saving...">Suggest Organization</.button>
+        </.form>
       </div>
+
+      <div class="h-full border-t border-zinc-400 md:border-l"></div>
+
+      <.what_belongs_here />
     </div>
     """
   end
@@ -344,9 +335,9 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
   defp what_belongs_here(assigns) do
     ~H"""
     <aside>
-      <h2 class="text-xl font-extrabold leading-7 text-zinc-800">
+      <.text_header>
         What belongs here?
-      </h2>
+      </.text_header>
       <ul class="mt-10 grid gap-6">
         <li>
           <.p>

@@ -24,15 +24,15 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   alias Phoenix.LiveView.JS
   import BuiltWithPhoenixWeb.Gettext
 
+  attr(:id, :string, required: true)
   attr(:name, :string, required: true)
-  attr(:url, :string, required: true)
   attr(:logo, :string, required: true)
   attr(:image, :string, required: true)
 
   def organization_card(assigns) do
     ~H"""
-    <a
-      href={@url}
+    <.link
+      navigate={~p"/organizations/#{@id}"}
       class="group grid h-full w-full gap-4 rounded-xl border bg-white p-4 shadow transition-shadow hover:shadow-lg"
     >
       <div class="flex h-8 shrink-0 items-center gap-4">
@@ -42,11 +42,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <div class="flex items-center overflow-clip border">
         <img src={@image} width="100%" class="transition-transform group-hover:scale-110" />
       </div>
-    </a>
+    </.link>
     """
   end
-
-  attr(:suggesting?, :boolean, default: false)
 
   def hero(assigns) do
     ~H"""
@@ -60,34 +58,32 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
             A curated catalog of organizations using Phoenix
           </.p>
           <div class="mt-8 flex items-center justify-center gap-x-6">
-            <%= if @suggesting? do %>
-              <.link navigate={~p"/"} class="text-sm font-semibold leading-6 text-zinc-800">
-                About
-              </.link>
-            <% else %>
-              <a href="#about" class="text-sm font-semibold leading-6 text-zinc-800">
-                About
-              </a>
-            <% end %>
-            <%= if @suggesting? do %>
-              <button
-                type="button"
-                class="bg-primary-600 rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              >
-                Suggest <span aria-hidden="true">→</span>
-              </button>
-            <% else %>
-              <.link
-                navigate={~p"/suggest"}
-                class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-              >
-                Suggest <span aria-hidden="true">→</span>
-              </.link>
-            <% end %>
+            <.link navigate={~p"/"} class="text-sm font-semibold leading-6 text-zinc-800">
+              Home
+            </.link>
+            <.link
+              navigate={~p"/suggest"}
+              class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+            >
+              Suggest <span aria-hidden="true">→</span>
+            </.link>
           </div>
         </div>
       </div>
     </div>
+    """
+  end
+
+  def footer(assigns) do
+    ~H"""
+    <footer id="about" class="bg-white px-6 py-24 sm:py-32 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">About</h2>
+        <.p class="text-pretty mt-6 text-lg leading-8 text-gray-600">
+          This is a manually curated list of companies and organizations using Phoenix, with an emphasis on showing real-life projects, not just developer-focused tools and sites. Our goal isn't to get as many sites in here as possible; it's to show people who are unsure about Phoenix what it can be used for.
+        </.p>
+      </div>
+    </footer>
     """
   end
 
@@ -97,6 +93,17 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def p(assigns) do
     ~H"""
     <p class={["text-lg leading-8 text-gray-600", @class]}>
+      <%= render_slot(@inner_block) %>
+    </p>
+    """
+  end
+
+  attr(:class, :string, default: "")
+  slot(:inner_block, required: true)
+
+  def text_header(assigns) do
+    ~H"""
+    <p class={["text-xl font-extrabold leading-7 text-zinc-800", @class]}>
       <%= render_slot(@inner_block) %>
     </p>
     """

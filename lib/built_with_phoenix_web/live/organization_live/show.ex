@@ -10,7 +10,10 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Show do
         <:subtitle>This is a organization record from your database.</:subtitle>
 
         <:actions>
-          <.link patch={~p"/organizations/#{@organization}/show/edit"} phx-click={JS.push_focus()}>
+          <.link
+            patch={~p"/admin/organizations/#{@organization}/show/edit"}
+            phx-click={JS.push_focus()}
+          >
             <.button>Edit organization</.button>
           </.link>
         </:actions>
@@ -38,12 +41,12 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Show do
         <:item title="Author email"><%= @organization.author_email %></:item>
       </.list>
 
-      <.back navigate={~p"/organizations"}>Back to organizations</.back>
+      <.back navigate={~p"/admin/organizations"}>Back to organizations</.back>
     </div>
     <.modal
       :if={@live_action == :edit}
       id="organization-modal"
-      on_cancel={JS.patch(~p"/organizations/#{@organization}")}
+      on_cancel={JS.patch(~p"/admin/organizations/#{@organization}")}
     >
       <.live_component
         module={BuiltWithPhoenixWeb.OrganizationLive.FormComponent}
@@ -52,7 +55,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Show do
         action={@live_action}
         current_user={@current_user}
         organization={@organization}
-        patch={~p"/organizations/#{@organization}"}
+        patch={~p"/admin/organizations/#{@organization}"}
       />
     </.modal>
     """

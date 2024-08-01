@@ -47,5 +47,8 @@
 	},
 	"[dotenv]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[phoenix-heex]": {
+		"editor.defaultFormatter": "lexical-lsp.lexical"
 	}
 }

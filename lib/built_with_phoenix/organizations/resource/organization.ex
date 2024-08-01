@@ -45,6 +45,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
   code_interface do
     define :active
     define :approve
+    define :get_by_id, action: :by_id, args: [:id], get?: true
   end
 
   actions do
@@ -80,6 +81,16 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
 
     read :active do
       filter expr(status == :active)
+    end
+
+    read :by_id do
+      # This action has one argument :id of type :uuid
+      argument :id, :uuid, allow_nil?: false
+      # Tells us we expect this action to return a single result
+      get? true
+      # Filters the `:id` given in the argument
+      # against the `id` of each element in the resource
+      filter expr(id == ^arg(:id))
     end
   end
 end

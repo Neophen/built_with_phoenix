@@ -11,44 +11,28 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
   @impl LiveView
   def render(assigns) do
     ~H"""
-    <div class="mx-auto min-w-0 max-w-screen-lg px-4 pt-12 pb-32">
-      <.hero />
+    <div class="mt-12">
+      <div class=""></div>
 
-      <ul class="mt-12 flex flex-wrap justify-center">
-        <li key="all">
-          <button
-            data-active={is_nil(@technology_id)}
-            type="button"
-            class="border-b-2 border-slate-500 px-3 py-1 text-slate-500 data-[active]:border-orange-500 data-[active]:text-slate-900"
-            phx-click="remove-technology"
-          >
-            <%= dgettext("home.html", "All Technologies") %>
-          </button>
-        </li>
-        <li :for={technology <- @technologies} key={technology.id}>
-          <button
-            data-active={technology.id == @technology_id}
-            type="button"
-            class="border-b-2 border-slate-500 px-3 py-1 text-slate-500 data-[active]:border-orange-500 data-[active]:text-slate-900"
-            phx-click="select-technology"
-            phx-value-id={technology.id}
-          >
-            <%= technology.name %>
-          </button>
-        </li>
-      </ul>
+      <.form
+        for={@form}
+        id="technologies-form"
+        phx-change="change-technologies"
+        class="min-w-0 mx-auto w-max"
+      >
+        <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
+      </.form>
 
       <ul class="grid-fill-cols-[256px] mt-6 grid gap-4">
         <li :for={organization <- @organizations} key={organization.id}>
           <.organization_card
-            url={organization.url}
+            id={organization.id}
             name={organization.name}
             logo={organization.logo}
             image={organization.image}
           />
         </li>
       </ul>
-
       <.footer />
     </div>
     """
@@ -58,54 +42,52 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:technology_id, nil)
+     |> assign_form()
      |> assign(
        :technologies,
        Technology
        |> Ash.Query.sort([:name])
        |> Ash.read!()
+       |> Enum.map(fn tech -> {tech.name, tech.id} end)
      )
      |> assign_organizations()}
   end
 
   @impl LiveView
-  def handle_event("select-technology", %{"id" => id}, socket) do
+  def handle_event("change-technologies", %{"organization" => params}, socket) do
+    IO.inspect(params, label: "____params")
+
     {:noreply,
      socket
-     |> assign(:technology_id, id)
+     |> assign(
+       :form,
+       AshPhoenix.Form.validate(socket.assigns.form, params)
+       |> Map.put(:errors, [])
+     )
      |> assign_organizations()}
+
+    # {:noreply,
+    #  assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, organization_params))}
   end
 
-  def handle_event("remove-technology", _params, socket) do
-    {:noreply,
-     socket
-     |> assign(:technology_id, nil)
-     |> assign_organizations()}
+  defp assign_organizations(%{assigns: %{form: form}} = socket) do
+    assign(socket, :organizations, active(Map.get(form.params, "technologies")))
   end
 
-  defp assign_organizations(%{assigns: %{technology_id: technology_id}} = socket) do
-    assign(socket, :organizations, active(technology_id))
+  defp assign_form(socket) do
+    form =
+      AshPhoenix.Form.for_create(Organization, :create_suggestion, as: "organization")
+
+    assign(socket, form: to_form(form))
   end
 
   def active(nil), do: Organization.active!()
+  def active(""), do: Organization.active!()
 
-  def active(technology_id),
+  def active(technologies),
     do:
       Organization
       |> Ash.Query.for_read(:active)
-      |> Ash.Query.filter(technologies.id == ^technology_id)
+      |> Ash.Query.filter(technologies.id in ^technologies)
       |> Ash.read!()
-
-  defp footer(assigns) do
-    ~H"""
-    <footer id="about" class="bg-white px-6 py-24 sm:py-32 lg:px-8">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">About</h2>
-        <.p class="text-pretty mt-6 text-lg leading-8 text-gray-600">
-          This is a manually curated list of companies and organizations using Phoenix, with an emphasis on showing real-life projects, not just developer-focused tools and sites. Our goal isn't to get as many sites in here as possible; it's to show people who are unsure about Phoenix what it can be used for.
-        </.p>
-      </div>
-    </footer>
-    """
-  end
 end
