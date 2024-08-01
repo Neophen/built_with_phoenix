@@ -21,7 +21,8 @@ config :built_with_phoenix,
   secret_access_key: System.fetch_env!("AWS_SECRET_ACCESS_KEY"),
   aws_endpoint: System.fetch_env!("AWS_ENDPOINT"),
   bucket: System.fetch_env!("S3_BUCKET_NAME"),
-  region: System.fetch_env!("AWS_REGION")
+  region: System.fetch_env!("AWS_REGION"),
+  token_signing_secret: System.fetch_env!("TOKEN_SIGNING_SECRET")
 
 # Configures the endpoint
 config :built_with_phoenix, BuiltWithPhoenixWeb.Endpoint,
@@ -76,4 +77,3 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
-import_config "#{config_env()}.secrets.exs"
