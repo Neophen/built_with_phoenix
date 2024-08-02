@@ -18,7 +18,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
         for={@form}
         id="technologies-form"
         phx-change="change-technologies"
-        class="min-w-0 mx-auto w-max"
+        class="min-w-0 mx-auto w-max max-w-full"
       >
         <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
       </.form>
