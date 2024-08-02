@@ -24,7 +24,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
       public? true
     end
 
-    attribute :image_url, :string, public?: true
+    attribute :logo, :string, public?: true
     attribute :description, :string, public?: true
 
     attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus,
@@ -47,7 +47,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
       accept [
         :name,
         :url,
-        :image_url,
+        :logo,
         :description
       ]
     end
@@ -56,7 +56,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
       accept [
         :name,
         :url,
-        :image_url,
+        :logo,
         :description
       ]
     end

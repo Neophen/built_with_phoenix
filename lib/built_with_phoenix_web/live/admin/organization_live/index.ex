@@ -6,7 +6,9 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
   alias BuiltWithPhoenix.Organizations.Resource.Organization
   alias BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent
 
-  @impl true
+  alias Phoenix.LiveView
+
+  @impl LiveView
   def render(assigns) do
     ~H"""
     <div class="grid gap-8 p-8">
@@ -87,7 +89,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
     """
   end
 
-  @impl true
+  @impl LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -95,7 +97,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
      |> assign_new(:current_user, fn -> nil end)}
   end
 
-  @impl true
+  @impl LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -121,12 +123,12 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
     |> assign(:organization, nil)
   end
 
-  @impl true
+  @impl LiveView
   def handle_info({FormComponent, {:saved, _organization}}, socket) do
     {:noreply, assign_organizations(socket)}
   end
 
-  @impl true
+  @impl LiveView
   def handle_event("decline", %{"id" => id}, socket) do
     Ash.get!(Organization, id, actor: socket.assigns.current_user)
     |> Ash.Changeset.for_update(:decline)
