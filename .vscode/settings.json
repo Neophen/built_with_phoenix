@@ -9,7 +9,7 @@
 	"emmet.includeLanguages": {
 		"phoenix-heex": "html"
 	},
-	"cSpell.words": ["noreply", "Octafest", "typedstruct"],
+	"cSpell.words": ["noreply", "Octafest", "presign", "typedstruct"],
 	"search.exclude": {
 		"**/.lexical": true,
 		"**/deps": true,

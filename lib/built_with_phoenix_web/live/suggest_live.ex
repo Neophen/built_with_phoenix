@@ -23,30 +23,20 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
           class="min-w-0 grid gap-y-8"
         >
           <.section title="Tell us about the Organization">
-            <div class="grid gap-4 md:grid-cols-[1fr_2fr]">
-              <.input
-                field={@form[:name]}
-                label="Organization name"
-                required
-                placeholder="The Mykolas"
-              />
-              <.input
-                field={@form[:url]}
-                label="Organization url"
-                required
-                placeholder="https://themykolas.com"
-              />
-            </div>
-
-            <div class="grid gap-4 md:grid-cols-[1fr_3fr]">
-              <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
-              <.input
-                type="textarea"
-                field={@form[:description]}
-                label="Description"
-                placeholder="A short description of what the organization does"
-              />
-            </div>
+            <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
+            <.input
+              field={@form[:url]}
+              label="Organization url"
+              required
+              placeholder="https://themykolas.com"
+            />
+            <.input
+              type="textarea"
+              field={@form[:description]}
+              label="Description"
+              placeholder="A short description of what the organization does"
+            />
+            <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
             <.image_input id="image" upload={@uploads.image} value={@form[:image].value} />
           </.section>
 

@@ -8,7 +8,7 @@ defmodule BuiltWithPhoenixWeb.SuggestTechnologyLive do
   @impl LiveView
   def render(assigns) do
     ~H"""
-    <div class="mx-8 mt-12 grid gap-12 md:grid-cols-[1fr_1px_256px]">
+    <div class="mx-8 mt-12">
       <div class="grid content-start gap-10">
         <.text_header>
           Suggest a Technology
@@ -24,31 +24,25 @@ defmodule BuiltWithPhoenixWeb.SuggestTechnologyLive do
           phx-submit="save"
           class="min-w-0 max-h-min grid gap-y-8"
         >
-          <.section title="Tell us about the Technology">
-            <.input field={@form[:name]} label="Name of Technology" required placeholder="Nerves" />
+          <.section title="Tell us about the Organization">
+            <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
             <.input
               field={@form[:url]}
-              label="Link to the site/git/hex"
+              label="Organization url"
               required
-              placeholder="https://nerves-project.org/"
+              placeholder="https://themykolas.com"
             />
-
-            <.logo_input id="logo" upload={@uploads.logo} />
-
+            <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
             <.input
               type="textarea"
               field={@form[:description]}
               label="Description"
-              placeholder="open-source platform that combines the rock-solid BEAM virtual machine and Elixir ecosystem to easily build and deploy production embedded systems"
+              placeholder="A short description of what the organization does"
             />
           </.section>
           <.button type="submit" phx-disable-with="Saving...">Suggest Technology</.button>
         </.form>
       </div>
-
-      <div class="h-full border-t border-zinc-400 md:border-l"></div>
-
-      <.what_belongs_here />
     </div>
     """
   end
@@ -79,7 +73,7 @@ defmodule BuiltWithPhoenixWeb.SuggestTechnologyLive do
   def handle_event("save", %{"technology" => technology_params}, socket) do
     technology_params =
       technology_params
-      |> Map.put("image_url", get_file(socket, :logo))
+      |> Map.put("logo", get_file(socket, :logo))
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: technology_params) do
       {:ok, technology} ->
@@ -113,58 +107,5 @@ defmodule BuiltWithPhoenixWeb.SuggestTechnologyLive do
       {:ok, S3Uploader.entry_url(entry)}
     end)
     |> List.first()
-  end
-
-  defp what_belongs_here(assigns) do
-    ~H"""
-    <aside>
-      <.text_header>
-        What belongs here?
-      </.text_header>
-      <ul class="mt-10 grid gap-6">
-        <li>
-          <.p>
-            Companies and non-profits using Phoenix to do or support the work of their technology (whether that's "make profit" or "teach healthcare" or whatever else)
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            No packages or other code
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            No individual courses or books or other training resources
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            If it's a developer-focused SaaS, it needs to be large--think Fathom Analytics, not someone's passion side project
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            We have a bias against tools that are only targeted at Phoenix developers, because those tools won't add any impact to folks' understanding how Phoenix is used in the broader world
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            Agencies are only allowed if they also have products, and are here to show their products
-          </.p>
-        </li>
-        <hr class="border-zinc-400" />
-        <li>
-          <.p>
-            Marketing sites for individual developers or agencies aren't allowed as sites examples
-          </.p>
-        </li>
-      </ul>
-    </aside>
-    """
   end
 end

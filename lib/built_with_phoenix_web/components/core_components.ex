@@ -1032,4 +1032,8 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
   def error_to_string(:external_client_failure), do: "External client failure"
   def error_to_string(_), do: "Something went wrong"
+
+  def get_checkgroup_value(nil), do: nil
+  def get_checkgroup_value(value) when is_binary(value), do: value
+  def get_checkgroup_value(value), do: Enum.map(value, &if(is_binary(&1), do: &1, else: &1.id))
 end

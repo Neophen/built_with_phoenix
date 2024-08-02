@@ -5,7 +5,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
   alias BuiltWithPhoenix.Organizations.Resource.Technology
   alias Phoenix.LiveComponent
 
-  @impl true
+  @impl LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -18,25 +18,21 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
         class="min-w-0 grid gap-y-8"
       >
         <.section title="Tell us about the Organization">
-          <div class="grid gap-4 md:grid-cols-[1fr_2fr]">
-            <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
-            <.input
-              field={@form[:url]}
-              label="Organization url"
-              required
-              placeholder="https://themykolas.com"
-            />
-          </div>
+          <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
+          <.input
+            field={@form[:url]}
+            label="Organization url"
+            required
+            placeholder="https://themykolas.com"
+          />
+          <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
+          <.input
+            type="textarea"
+            field={@form[:description]}
+            label="Description"
+            placeholder="A short description of what the organization does"
+          />
 
-          <div class="grid gap-4 md:grid-cols-[1fr_3fr]">
-            <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
-            <.input
-              type="textarea"
-              field={@form[:description]}
-              label="Description"
-              placeholder="A short description of what the organization does"
-            />
-          </div>
           <.image_input id="image" upload={@uploads.image} value={@form[:image].value} />
         </.section>
 
@@ -179,8 +175,4 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
 
     assign(socket, form: to_form(form))
   end
-
-  defp get_checkgroup_value(nil), do: nil
-  defp get_checkgroup_value(value) when is_binary(value), do: value
-  defp get_checkgroup_value(value), do: Enum.map(value, &if(is_binary(&1), do: &1, else: &1.id))
 end
