@@ -9,11 +9,6 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage organization records in your database.</:subtitle>
-      </.header>
-
       <.form
         for={@form}
         id="organization-form"
@@ -23,7 +18,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
         class="min-w-0 grid gap-y-8"
       >
         <.section title="Tell us about the Organization">
-          <div class="grid-cols-[1fr_2fr] grid gap-4">
+          <div class="grid gap-4 md:grid-cols-[1fr_2fr]">
             <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
             <.input
               field={@form[:url]}
@@ -33,8 +28,8 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
             />
           </div>
 
-          <div class="grid-cols-[1fr_3fr] grid gap-4">
-            <.logo_input id="logo" upload={@uploads.logo} />
+          <div class="grid gap-4 md:grid-cols-[1fr_3fr]">
+            <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
             <.input
               type="textarea"
               field={@form[:description]}
@@ -42,7 +37,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
               placeholder="A short description of what the organization does"
             />
           </div>
-          <.image_input id="image" upload={@uploads.image} />
+          <.image_input id="image" upload={@uploads.image} value={@form[:image].value} />
         </.section>
 
         <.section title="How do you know they use Phoenix Framework?">
@@ -124,13 +119,15 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
      assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, organization_params))}
   end
 
-  def handle_event("save", %{"organization" => organization_params}, socket) do
-    # organization_params =
-    #   organization_params
-    #   |> Map.put("logo", get_file(socket, :logo))
-    #   |> Map.put("image", get_file(socket, :image))
-
-    IO.inspect(organization_params, label: "____organization_params")
+  def handle_event(
+        "save",
+        %{"organization" => organization_params},
+        %{assigns: %{organization: organization}} = socket
+      ) do
+    organization_params =
+      organization_params
+      |> Map.put("logo", get_file(socket, :logo, organization.logo))
+      |> Map.put("image", get_file(socket, :image, organization.image))
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: organization_params) do
       {:ok, organization} ->
@@ -153,12 +150,16 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
     {:ok, meta, socket}
   end
 
-  defp get_file(socket, upload_key) do
+  defp get_file(socket, upload_key, default) do
     consume_uploaded_entries(socket, upload_key, fn _, entry ->
       {:ok, S3Uploader.entry_url(entry)}
     end)
     |> List.first()
+    |> get_file_value(default)
   end
+
+  defp get_file_value(nil, default), do: default
+  defp get_file_value(new_value, _default), do: new_value
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
@@ -170,7 +171,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
           actor: socket.assigns.current_user
         )
       else
-        AshPhoenix.Form.for_create(BuiltWithPhoenix.Organizations.Resource.Organization, :create,
+        AshPhoenix.Form.for_create(Organization, :create,
           as: "organization",
           actor: socket.assigns.current_user
         )
@@ -179,11 +180,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
     assign(socket, form: to_form(form))
   end
 
-  defp get_checkgroup_value(value) when is_binary(value) do
-    value
-  end
-
-  defp get_checkgroup_value(value) do
-    Enum.map(value, &if(is_binary(&1), do: &1, else: &1.id))
-  end
+  defp get_checkgroup_value(nil), do: nil
+  defp get_checkgroup_value(value) when is_binary(value), do: value
+  defp get_checkgroup_value(value), do: Enum.map(value, &if(is_binary(&1), do: &1, else: &1.id))
 end

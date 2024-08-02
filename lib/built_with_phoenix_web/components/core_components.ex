@@ -151,6 +151,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
 
   attr :upload, :map, required: true
   attr :id, :string, required: true
+  attr :value, :string, default: nil
 
   def logo_input(assigns) do
     ~H"""
@@ -159,11 +160,11 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <.label for={@upload.ref}>
         Logo
       </.label>
-      <div class="mt-2 flex items-center gap-x-3">
+      <div class="mt-2 grid gap-2">
         <div
-          :if={@upload.entries == []}
+          :if={@upload.entries == [] && is_nil(@value)}
           phx-drop-target={@upload.ref}
-          class="flex h-12 w-12 items-center justify-center rounded-md border border-dashed border-zinc-400"
+          class="flex h-14 w-14 items-center justify-center rounded-md border border-dashed border-zinc-400"
         >
           <svg
             class="h-9 w-9 text-gray-300"
@@ -180,33 +181,41 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         </div>
         <div
           :for={entry <- @upload.entries}
-          class="flex h-12 w-12 items-center justify-center overflow-hidden border border-zinc-400"
+          class="flex h-14 w-14 items-center justify-center overflow-hidden border border-zinc-400"
         >
           <.live_img_preview entry={entry} />
         </div>
-
-        <button
-          :for={entry <- @upload.entries}
-          type="button"
-          class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50"
-          phx-click="cancel-upload"
-          phx-value-key={@id}
-          phx-value-ref={entry.ref}
-          aria-label="cancel"
+        <div
+          :if={@upload.entries == [] && @value}
+          phx-drop-target={@upload.ref}
+          class="flex h-14 w-14 items-center justify-center overflow-hidden border border-zinc-400"
         >
-          Remove
-        </button>
+          <img src={@value} class="h-auto w-full" alt="" />
+        </div>
 
-        <label
-          for={@upload.ref}
-          class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-        >
-          <%= if @upload.entries == [] do %>
-            Select file
-          <% else %>
-            Change
-          <% end %>
-        </label>
+        <div class="flex items-center gap-2">
+          <label
+            for={@upload.ref}
+            class="block w-min whitespace-nowrap rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          >
+            <%= if @upload.entries == [] && is_nil(@value) do %>
+              Select
+            <% else %>
+              Change
+            <% end %>
+          </label>
+          <button
+            :for={entry <- @upload.entries}
+            type="button"
+            class="block w-min rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50"
+            phx-click="cancel-upload"
+            phx-value-key={@id}
+            phx-value-ref={entry.ref}
+            aria-label="cancel"
+          >
+            Remove
+          </button>
+        </div>
       </div>
       <.upload_errors_list upload={@upload} />
     </div>
@@ -215,6 +224,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
 
   attr :upload, :map, required: true
   attr :id, :string, required: true
+  attr :value, :string, default: nil
 
   def image_input(assigns) do
     ~H"""
@@ -224,7 +234,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         Cover photo
       </.label>
       <div
-        :if={@upload.entries == []}
+        :if={@upload.entries == [] && is_nil(@value)}
         phx-drop-target={@upload.ref}
         class="border-zinc-900/25 aspect-video mt-2 flex items-center justify-center rounded-lg border border-dashed px-6 py-10"
       >
@@ -256,13 +266,20 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       </div>
 
       <div
-        :if={@upload.entries != []}
+        :if={@upload.entries != [] || @value}
         phx-drop-target={@upload.ref}
         class="aspect-video relative mt-2 flex items-center justify-center border border-black"
       >
-        <.live_img_preview :for={entry <- @upload.entries} entry={entry} class="w-full h-auto" />
+        <.live_img_preview :for={entry <- @upload.entries} entry={entry} class="h-auto w-full" />
+        <img :if={@upload.entries == [] && @value} src={@value} class="h-auto w-full" />
 
         <div class="absolute right-4 bottom-4 flex items-center justify-end gap-4">
+          <label
+            for={@upload.ref}
+            class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          >
+            Change
+          </label>
           <button
             :for={entry <- @upload.entries}
             type="button"
@@ -274,13 +291,6 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
           >
             Remove
           </button>
-
-          <label
-            for={@upload.ref}
-            class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            Change
-          </label>
         </div>
       </div>
 
