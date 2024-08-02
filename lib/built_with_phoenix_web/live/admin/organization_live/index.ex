@@ -1,6 +1,8 @@
 defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
   use BuiltWithPhoenixWeb, :live_view
 
+  require Ash.Query
+
   alias BuiltWithPhoenix.Organizations.Resource.Organization
   alias BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent
 
@@ -142,6 +144,12 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
   end
 
   defp assign_organizations(socket) do
-    assign(socket, :organizations, Ash.read!(Organization, actor: socket.assigns[:current_user]))
+    assign(
+      socket,
+      :organizations,
+      Organization
+      |> Ash.Query.sort(:name)
+      |> Ash.read!(actor: socket.assigns[:current_user])
+    )
   end
 end
