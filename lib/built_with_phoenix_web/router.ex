@@ -43,19 +43,19 @@ defmodule BuiltWithPhoenixWeb.Router do
 
     ash_authentication_live_session :authentication_required,
       on_mount: {LiveUserAuth, :live_user_required} do
-      live "/admin/technologies", TechnologyLive.Index, :index
-      live "/admin/technologies/new", TechnologyLive.Index, :new
-      live "/admin/technologies/:id/edit", TechnologyLive.Index, :edit
+      live "/admin/technologies", Admin.TechnologyLive.Index, :index
+      live "/admin/technologies/new", Admin.TechnologyLive.Index, :new
+      live "/admin/technologies/:id/edit", Admin.TechnologyLive.Index, :edit
 
-      live "/admin/technologies/:id", TechnologyLive.Show, :show
-      live "/admin/technologies/:id/show/edit", TechnologyLive.Show, :edit
+      live "/admin/technologies/:id", Admin.TechnologyLive.Show, :show
+      live "/admin/technologies/:id/show/edit", Admin.TechnologyLive.Show, :edit
 
-      live "/admin/organizations", OrganizationLive.Index, :index
-      live "/admin/organizations/new", OrganizationLive.Index, :new
-      live "/admin/organizations/:id/edit", OrganizationLive.Index, :edit
+      live "/admin/organizations", Admin.OrganizationLive.Index, :index
+      live "/admin/organizations/new", Admin.OrganizationLive.Index, :new
+      live "/admin/organizations/:id/edit", Admin.OrganizationLive.Index, :edit
 
-      live "/admin/organizations/:id", OrganizationLive.Show, :show
-      live "/admin/organizations/:id/show/edit", OrganizationLive.Show, :edit
+      live "/admin/organizations/:id", Admin.OrganizationLive.Show, :show
+      live "/admin/organizations/:id/show/edit", Admin.OrganizationLive.Show, :edit
     end
   end
 

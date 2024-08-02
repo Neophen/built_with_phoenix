@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
+defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
   use BuiltWithPhoenixWeb, :live_view
 
   alias BuiltWithPhoenix.Organizations.Resource.Organization
@@ -57,7 +57,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
       on_cancel={JS.patch(~p"/admin/organizations")}
     >
       <.live_component
-        module={BuiltWithPhoenixWeb.OrganizationLive.FormComponent}
+        module={BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent}
         id={(@organization && @organization.id) || :new}
         title={@page_title}
         current_user={@current_user}
@@ -110,7 +110,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Index do
 
   @impl true
   def handle_info(
-        {BuiltWithPhoenixWeb.OrganizationLive.FormComponent, {:saved, organization}},
+        {BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent, {:saved, organization}},
         socket
       ) do
     {:noreply, stream_insert(socket, :organizations, organization)}

@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.TechnologyLive.FormComponent do
+defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.FormComponent do
   use BuiltWithPhoenixWeb, :live_component
 
   @impl true

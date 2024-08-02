@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.TechnologyLive.Show do
+defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Show do
   use BuiltWithPhoenixWeb, :live_view
 
   @impl true
@@ -34,7 +34,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Show do
       on_cancel={JS.patch(~p"/admin/technologies/#{@technology}")}
     >
       <.live_component
-        module={BuiltWithPhoenixWeb.TechnologyLive.FormComponent}
+        module={BuiltWithPhoenixWeb.Admin.TechnologyLive.FormComponent}
         id={@technology.id}
         title={@page_title}
         action={@live_action}

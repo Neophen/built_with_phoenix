@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
+defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Index do
   use BuiltWithPhoenixWeb, :live_view
 
   @impl true
@@ -51,7 +51,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
       on_cancel={JS.patch(~p"/admin/technologies")}
     >
       <.live_component
-        module={BuiltWithPhoenixWeb.TechnologyLive.FormComponent}
+        module={BuiltWithPhoenixWeb.Admin.TechnologyLive.FormComponent}
         id={(@technology && @technology.id) || :new}
         title={@page_title}
         current_user={@current_user}
@@ -106,7 +106,7 @@ defmodule BuiltWithPhoenixWeb.TechnologyLive.Index do
 
   @impl true
   def handle_info(
-        {BuiltWithPhoenixWeb.TechnologyLive.FormComponent, {:saved, technology}},
+        {BuiltWithPhoenixWeb.Admin.TechnologyLive.FormComponent, {:saved, technology}},
         socket
       ) do
     {:noreply, stream_insert(socket, :technologies, technology)}

@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.OrganizationLive.Show do
+defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Show do
   use BuiltWithPhoenixWeb, :live_view
 
   @impl true
@@ -49,7 +49,7 @@ defmodule BuiltWithPhoenixWeb.OrganizationLive.Show do
       on_cancel={JS.patch(~p"/admin/organizations/#{@organization}")}
     >
       <.live_component
-        module={BuiltWithPhoenixWeb.OrganizationLive.FormComponent}
+        module={BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent}
         id={@organization.id}
         title={@page_title}
         action={@live_action}
