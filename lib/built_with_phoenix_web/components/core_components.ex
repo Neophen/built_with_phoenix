@@ -80,9 +80,20 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     """
   end
 
+  attr :user?, :boolean, default: false
+
   def footer(assigns) do
     ~H"""
     <footer id="about" class="bg-white px-6 py-24 sm:py-32 lg:px-8">
+      <div :if={@user?} class="fixed top-0 right-0 flex flex-wrap gap-4 p-4">
+        <.link class="border rounded-md bg-orange-200 px-3 py-2" navigate={~p"/admin/technologies"}>
+          Technologies
+        </.link>
+        <.link class="border rounded-md bg-orange-200 px-3 py-2" navigate={~p"/admin/organizations"}>
+          Organizations
+        </.link>
+      </div>
+
       <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">About</h2>
         <.p class="text-pretty mt-6 text-lg leading-8 text-gray-600">

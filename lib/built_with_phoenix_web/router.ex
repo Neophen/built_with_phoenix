@@ -22,10 +22,13 @@ defmodule BuiltWithPhoenixWeb.Router do
   scope "/", BuiltWithPhoenixWeb do
     pipe_through :browser
 
-    live "/", HomeLive
-    live "/suggest", SuggestLive
-    live "/organizations/:id", ShowOrganizationLive
-    live "/suggest-technology", SuggestTechnologyLive
+    ash_authentication_live_session :public,
+      on_mount: {LiveUserAuth, :live_user_optional} do
+      live "/", HomeLive
+      live "/suggest", SuggestLive
+      live "/organizations/:id", ShowOrganizationLive
+      live "/suggest-technology", SuggestTechnologyLive
+    end
 
     # add these lines -->
     # Leave out `register_path` and `reset_path` if you don't want to support
@@ -41,7 +44,7 @@ defmodule BuiltWithPhoenixWeb.Router do
     reset_route []
     # <-- add these lines
 
-    ash_authentication_live_session :authentication_required,
+    ash_authentication_live_session :admin,
       on_mount: {LiveUserAuth, :live_user_required} do
       live "/admin/technologies", Admin.TechnologyLive.Index, :index
       live "/admin/technologies/new", Admin.TechnologyLive.Index, :new
