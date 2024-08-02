@@ -25,6 +25,7 @@ defmodule BuiltWithPhoenixWeb.Router do
     live "/", HomeLive
     live "/suggest", SuggestLive
     live "/organizations/:id", ShowOrganizationLive
+    live "/suggest-technology", SuggestTechnologyLive
 
     # add these lines -->
     # Leave out `register_path` and `reset_path` if you don't want to support

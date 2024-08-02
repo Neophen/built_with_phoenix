@@ -28,10 +28,14 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
     attribute :image, :string, public?: true
     attribute :usage_public, :string, public?: true
     attribute :usage_private, :string, public?: true
+    attribute :description, :string, public?: true
     attribute :extra_sites, :string, public?: true
     attribute :author_name, :string, public?: true
     attribute :author_email, :string, public?: true
-    attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus, public?: true
+
+    attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus,
+      public?: true,
+      default: :new
   end
 
   relationships do
@@ -59,6 +63,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
         :image,
         :usage_public,
         :usage_private,
+        :description,
         :extra_sites,
         :author_name,
         :author_email

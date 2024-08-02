@@ -67,6 +67,12 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
             >
               Suggest <span aria-hidden="true">→</span>
             </.link>
+            <.link
+              navigate={~p"/suggest-technology"}
+              class="rounded-md bg-primary-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+            >
+              Suggest Technology <span aria-hidden="true">→</span>
+            </.link>
           </div>
         </div>
       </div>
@@ -106,6 +112,107 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     <p class={["text-xl font-extrabold leading-7 text-zinc-800", @class]}>
       <%= render_slot(@inner_block) %>
     </p>
+    """
+  end
+
+  attr :title, :string, required: true
+  slot :inner_block, required: true
+
+  def section(assigns) do
+    ~H"""
+    <.section_header text={@title} />
+
+    <%= render_slot(@inner_block) %>
+
+    <hr class="border-zinc-400" />
+    """
+  end
+
+  attr :text, :string, required: true
+
+  def section_header(assigns) do
+    ~H"""
+    <h2 class="text-base font-semibold leading-7 text-zinc-800">
+      <%= @text %>
+    </h2>
+    """
+  end
+
+  attr :upload, :map, required: true
+  attr :id, :string, required: true
+
+  def logo_input(assigns) do
+    ~H"""
+    <div class="col-span-full">
+      <.live_file_input upload={@upload} class="sr-only" />
+      <.label for={@upload.ref}>
+        Logo
+      </.label>
+      <div class="mt-2 flex items-center gap-x-3">
+        <div
+          :if={@upload.entries == []}
+          phx-drop-target={@upload.ref}
+          class="flex h-12 w-12 items-center justify-center rounded-md border border-dashed border-zinc-400"
+        >
+          <svg
+            class="h-9 w-9 text-gray-300"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div
+          :for={entry <- @upload.entries}
+          class="flex h-12 w-12 items-center justify-center overflow-hidden border border-zinc-400"
+        >
+          <.live_img_preview entry={entry} />
+        </div>
+
+        <button
+          :for={entry <- @upload.entries}
+          type="button"
+          class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50"
+          phx-click="cancel-upload"
+          phx-value-key={@id}
+          phx-value-ref={entry.ref}
+          aria-label="cancel"
+        >
+          Remove
+        </button>
+
+        <label
+          for={@upload.ref}
+          class="block rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        >
+          <%= if @upload.entries == [] do %>
+            Select file
+          <% else %>
+            Change
+          <% end %>
+        </label>
+      </div>
+      <.upload_errors_list upload={@upload} />
+    </div>
+    """
+  end
+
+  attr :upload, :map, required: true
+
+  def upload_errors_list(assigns) do
+    ~H"""
+    <ul>
+      <%= for entry <- @upload.entries do %>
+        <.error :for={err <- upload_errors(@upload, entry)}><%= error_to_string(err) %></.error>
+      <% end %>
+
+      <.error :for={err <- upload_errors(@upload)}><%= error_to_string(err) %></.error>
+    </ul>
     """
   end
 
@@ -823,4 +930,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  def error_to_string(:too_large), do: "Too large"
+  def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  def error_to_string(:external_client_failure), do: "External client failure"
+  def error_to_string(_), do: "Something went wrong"
 end

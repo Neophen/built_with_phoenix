@@ -33,7 +33,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
           />
         </li>
       </ul>
-      <.footer />
+      <.footer user?={not is_nil(@current_user)} />
     </div>
     """
   end
@@ -50,24 +50,19 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
        |> Ash.read!()
        |> Enum.map(fn tech -> {tech.name, tech.id} end)
      )
+     |> assign(:current_user, Map.get(socket.assigns, :current_user))
      |> assign_organizations()}
   end
 
   @impl LiveView
   def handle_event("change-technologies", %{"organization" => params}, socket) do
-    IO.inspect(params, label: "____params")
-
     {:noreply,
      socket
      |> assign(
        :form,
-       AshPhoenix.Form.validate(socket.assigns.form, params)
-       |> Map.put(:errors, [])
+       AshPhoenix.Form.validate(socket.assigns.form, params) |> Map.put(:errors, [])
      )
      |> assign_organizations()}
-
-    # {:noreply,
-    #  assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, organization_params))}
   end
 
   defp assign_organizations(%{assigns: %{form: form}} = socket) do

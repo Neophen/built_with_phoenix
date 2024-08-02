@@ -25,6 +25,11 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
     end
 
     attribute :image_url, :string, public?: true
+    attribute :description, :string, public?: true
+
+    attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus,
+      public?: true,
+      default: :new
   end
 
   relationships do
@@ -37,5 +42,26 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
 
   actions do
     defaults [:read, :destroy, create: :*, update: :*]
+
+    create :create_suggestion do
+      accept [
+        :name,
+        :url,
+        :image_url,
+        :description
+      ]
+    end
+
+    update :approve do
+      change set_attribute(:status, :active)
+    end
+
+    update :decline do
+      change set_attribute(:status, :declined)
+    end
+
+    read :active do
+      filter expr(status == :active)
+    end
   end
 end
