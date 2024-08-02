@@ -71,7 +71,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
 
   defp assign_form(socket) do
     form =
-      AshPhoenix.Form.for_create(Organization, :create_suggestion, as: "organization")
+      AshPhoenix.Form.for_create(Organization, :create, as: "organization")
 
     assign(socket, form: to_form(form))
   end

@@ -41,9 +41,18 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*, update: :*]
+    defaults [:read, :destroy]
 
-    create :create_suggestion do
+    create :create do
+      accept [
+        :name,
+        :url,
+        :image_url,
+        :description
+      ]
+    end
+
+    update :update do
       accept [
         :name,
         :url,

@@ -87,3 +87,16 @@ label.checkbox-label:has(:checked) {
 	--active: 1;
 	color: var(--selected);
 }
+
+.status[data-status="new"] {
+	--status-bg: #71717a;
+	--status-text: white;
+}
+.status[data-status="active"] {
+	--status-bg: #a3e635;
+	--status-text: rgb(28 25 23);
+}
+.status[data-status="declined"] {
+	--status-bg: #f87171;
+	--status-text: white;
+}

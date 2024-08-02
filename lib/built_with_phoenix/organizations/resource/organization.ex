@@ -53,9 +53,32 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*, update: :*]
+    defaults [:read, :destroy]
 
-    create :create_suggestion do
+    create :create do
+      accept [
+        :name,
+        :url,
+        :logo,
+        :image,
+        :usage_public,
+        :usage_private,
+        :description,
+        :extra_sites,
+        :author_name,
+        :author_email
+      ]
+
+      argument :technologies, {:array, :uuid_v7} do
+        allow_nil? false
+      end
+
+      change manage_relationship(:technologies, type: :append_and_remove)
+    end
+
+    update :update do
+      require_atomic? false
+
       accept [
         :name,
         :url,
