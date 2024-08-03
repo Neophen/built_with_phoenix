@@ -19,7 +19,6 @@ config :built_with_phoenix,
 config :built_with_phoenix,
   access_key_id: System.fetch_env!("AWS_ACCESS_KEY_ID"),
   secret_access_key: System.fetch_env!("AWS_SECRET_ACCESS_KEY"),
-  aws_endpoint: System.fetch_env!("AWS_ENDPOINT"),
   bucket: System.fetch_env!("S3_BUCKET_NAME"),
   region: System.fetch_env!("AWS_REGION"),
   token_signing_secret: System.fetch_env!("TOKEN_SIGNING_SECRET")
