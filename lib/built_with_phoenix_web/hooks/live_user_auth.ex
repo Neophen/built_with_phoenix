@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenix.Hooks.LiveUserAuth do
+defmodule BuiltWithPhoenixWeb.Hooks.LiveUserAuth do
   @moduledoc """
   Helpers for authenticating users in LiveViews.
   """

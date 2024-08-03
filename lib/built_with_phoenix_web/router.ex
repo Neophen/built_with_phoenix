@@ -2,10 +2,11 @@ defmodule BuiltWithPhoenixWeb.Router do
   use BuiltWithPhoenixWeb, :router
   use AshAuthentication.Phoenix.Router
 
-  alias BuiltWithPhoenix.Hooks.LiveUserAuth
+  alias BuiltWithPhoenixWeb.Hooks.LiveUserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
+    plug BuiltWithPhoenixWeb.Plugs.HeathCheck
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {BuiltWithPhoenixWeb.Layouts, :root}

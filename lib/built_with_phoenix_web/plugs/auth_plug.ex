@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenix.Plugs.AuthPlug do
+defmodule BuiltWithPhoenixWeb.Plugs.AuthPlug do
   use AshAuthentication.Plug, otp_app: :built_with_phoenix
 
   def handle_success(conn, _activity, user, token) do
