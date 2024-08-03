@@ -37,7 +37,7 @@ defmodule BuiltWithPhoenix.MixProject do
       {:ash_authentication, "~> 4.0"},
       {:ash_postgres, "~> 2.0"},
       {:ash_phoenix, "~> 2.0"},
-      {:ash, git: "git@github.com:ash-project/ash.git", branch: "main", override: true},
+      {:ash, git: "https://github.com/ash-project/ash.git", branch: "main", override: true},
       {:igniter, "~> 0.3"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
