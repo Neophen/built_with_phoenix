@@ -50,5 +50,8 @@
 	},
 	"[phoenix-heex]": {
 		"editor.defaultFormatter": "lexical-lsp.lexical"
+	},
+	"[toml]": {
+		"editor.defaultFormatter": "tamasfe.even-better-toml"
 	}
 }

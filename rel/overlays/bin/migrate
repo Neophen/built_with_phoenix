@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+exec ./built_with_phoenix eval BuiltWithPhoenix.Release.migrate
