@@ -14,6 +14,9 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
             </div>
             <.text_header><%= @organization.name %></.text_header>
           </li>
+          <li :if={@organization.description}>
+            <pre class="text-pretty font-sans break-normal font-normal"><%= @organization.description %></pre>
+          </li>
           <li>
             <.p>How do we know they use phoenix:</.p>
             <pre class="text-pretty font-sans break-normal font-semibold"><%= @organization.usage_public %></pre>

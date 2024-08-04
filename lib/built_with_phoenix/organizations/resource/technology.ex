@@ -40,8 +40,16 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
     end
   end
 
+  calculations do
+    calculate :has_organizations, :boolean, expr(count(organizations) > 0)
+  end
+
   actions do
     defaults [:read, :destroy]
+
+    read :available do
+      filter expr(status == :active and has_organizations)
+    end
 
     create :create do
       accept [

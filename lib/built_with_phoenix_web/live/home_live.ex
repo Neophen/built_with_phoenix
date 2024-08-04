@@ -46,7 +46,8 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
      |> assign(
        :technologies,
        Technology
-       |> Ash.Query.sort([:name])
+       |> Ash.Query.for_read(:available)
+       |> Ash.Query.sort(:name)
        |> Ash.read!()
        |> Enum.map(fn tech -> {tech.name, tech.id} end)
      )

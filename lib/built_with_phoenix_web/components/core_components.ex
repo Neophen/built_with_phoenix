@@ -57,19 +57,22 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
           <.p class="mx-auto mt-6 max-w-xl">
             A curated catalog of organizations using Phoenix
           </.p>
-          <div class="mt-8 flex items-center justify-center gap-x-6">
-            <.link navigate={~p"/"} class="text-sm font-semibold leading-6 text-zinc-800">
+          <div class="mt-8 flex flex-col flex-wrap items-center justify-center gap-2 sm:flex-row sm:gap-6">
+            <.link
+              navigate={~p"/"}
+              class="whitespace-nowrap text-sm font-semibold leading-6 text-zinc-800"
+            >
               Home
             </.link>
             <.link
               navigate={~p"/suggest"}
-              class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              class="whitespace-nowrap rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
             >
               Suggest <span aria-hidden="true">→</span>
             </.link>
             <.link
               navigate={~p"/suggest-technology"}
-              class="rounded-md bg-primary-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              class="whitespace-nowrap rounded-md bg-primary-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
             >
               Suggest Technology <span aria-hidden="true">→</span>
             </.link>
@@ -99,6 +102,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         <.p class="text-pretty mt-6 text-lg leading-8 text-gray-600">
           This is a manually curated list of companies and organizations using Phoenix, with an emphasis on showing real-life projects, not just developer-focused tools and sites. Our goal isn't to get as many sites in here as possible; it's to show people who are unsure about Phoenix what it can be used for.
         </.p>
+
+        <div class="mt-12 flex items-center justify-center gap-2">
+          <p>This site is maintained by</p>
+          <a href="https://themykolas.com" class="block">
+            <img src={~p"/images/favicon.svg"} alt="" class="h-12 w-12 shrink-0" />
+          </a>
+        </div>
       </div>
     </footer>
     """
