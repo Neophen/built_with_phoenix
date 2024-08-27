@@ -10,22 +10,24 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
         <ul class="grid min-w-0 gap-8">
           <li class="flex flex-wrap items-center gap-2">
             <div class="rounded border bg-white p-2">
-              <img class="h-12 w-12" src={imgproxy(@organization.logo, "size:48:48")} alt="" />
+              <img class="h-12 w-12" src={imgproxy(@organization.logo, "h:48")} alt="" />
             </div>
             <.text_header><%= @organization.name %></.text_header>
           </li>
           <li :if={@organization.description}>
-            <pre class="text-pretty font-sans break-normal font-normal"><%= @organization.description %></pre>
+            <.p class="text-pretty font-sans break-normal font-normal">
+              <%= @organization.description %>
+            </.p>
           </li>
           <li>
             <.p>How do we know they use phoenix:</.p>
-            <.p class="text-pretty font-sans whitespace-pre-wrap break-normal font-semibold">
+            <.p class="text-pretty font-sans break-normal font-semibold">
               <%= @organization.usage_public %>
             </.p>
           </li>
           <li>
             <.p>Extra Sites:</.p>
-            <.p class="text-pretty font-sans whitespace-pre-wrap break-normal font-semibold">
+            <.p class="text-pretty font-sans break-normal font-semibold">
               <%= @organization.extra_sites %>
             </.p>
           </li>
@@ -54,8 +56,12 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
           </li>
         </ul>
       </div>
-      <div class="aspect-video row-start-1 min-w-0 drop-shadow-md md:row-start-auto">
-        <img src={imgproxy(@organization.image, "size:644:364")} class="rounded-xl" alt="" />
+      <div class=" h-[364px] row-start-1 min-w-0 drop-shadow-md md:row-start-auto">
+        <img
+          src={imgproxy(@organization.image, "size:644:364")}
+          class="aspect-video rounded-xl"
+          alt=""
+        />
       </div>
     </div>
     """

@@ -43,7 +43,8 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         <img
           src={imgproxy(@image, "size:284:160/rt:fit")}
           width="100%"
-          class="transition-transform group-hover:scale-110"
+          height="160"
+          class="h-[160px] object-cover transition-transform group-hover:scale-110"
         />
       </div>
     </.link>
