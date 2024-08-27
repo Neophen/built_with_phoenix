@@ -10,7 +10,7 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
         <ul class="grid min-w-0 gap-8">
           <li class="flex flex-wrap items-center gap-2">
             <div class="rounded border bg-white p-2">
-              <img class="h-12 w-12" src={imgproxy(@organization.logo, "h:48")} alt="" />
+              <img class="h-12" src={imgproxy(@organization.logo, "h:48")} alt="" />
             </div>
             <.text_header><%= @organization.name %></.text_header>
           </li>
