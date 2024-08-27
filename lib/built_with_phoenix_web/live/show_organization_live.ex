@@ -19,11 +19,15 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
           </li>
           <li>
             <.p>How do we know they use phoenix:</.p>
-            <pre class="text-pretty font-sans break-normal font-semibold"><%= @organization.usage_public %></pre>
+            <.p class="text-pretty font-sans whitespace-pre-wrap break-normal font-semibold">
+              <%= @organization.usage_public %>
+            </.p>
           </li>
           <li>
             <.p>Extra Sites:</.p>
-            <pre class="text-pretty font-sans break-normal font-semibold"><%= @organization.extra_sites %></pre>
+            <.p class="text-pretty font-sans whitespace-pre-wrap break-normal font-semibold">
+              <%= @organization.extra_sites %>
+            </.p>
           </li>
           <li class="pt-4">
             <a
