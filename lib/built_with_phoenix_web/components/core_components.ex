@@ -36,11 +36,15 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       class="group grid h-full w-full gap-4 rounded-xl border bg-white p-4 shadow transition-shadow hover:shadow-lg"
     >
       <div class="flex h-8 shrink-0 items-center gap-4">
-        <img src={@logo} class="h-full w-auto" />
+        <img src={imgproxy(@logo, "h:32")} class="h-full w-auto" />
         <%= @name %>
       </div>
       <div class="flex items-center overflow-clip border">
-        <img src={@image} width="100%" class="transition-transform group-hover:scale-110" />
+        <img
+          src={imgproxy(@image, "size:284:160/rt:fit")}
+          width="100%"
+          class="transition-transform group-hover:scale-110"
+        />
       </div>
     </.link>
     """
@@ -1046,4 +1050,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def get_checkgroup_value(nil), do: nil
   def get_checkgroup_value(value) when is_binary(value), do: value
   def get_checkgroup_value(value), do: Enum.map(value, &if(is_binary(&1), do: &1, else: &1.id))
+
+  def imgproxy(url, params) do
+    path = Base.url_encode64(url)
+    "https://img.themykolas.com/sig/#{params}/#{path}.webp"
+  end
 end
