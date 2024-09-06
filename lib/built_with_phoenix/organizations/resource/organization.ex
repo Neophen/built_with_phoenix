@@ -82,6 +82,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
 
       accept [
         :name,
+        :weight,
         :url,
         :logo,
         :image,
