@@ -12,7 +12,6 @@ defmodule BuiltWithPhoenixWeb.Fetcher do
   def fetch_website_details(_url), do: %{}
 
   defp do_fetch_site_details(host) do
-    dbg(host)
     url = "https://#{host}"
 
     opts = [

@@ -161,7 +161,6 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
       organization_params
       |> add_file("logo", socket)
       |> add_file("image", socket)
-      |> dbg()
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: organization_params) do
       {:ok, organization} ->
