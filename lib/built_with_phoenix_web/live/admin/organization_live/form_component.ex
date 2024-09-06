@@ -19,6 +19,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.FormComponent do
       >
         <.section title="Tell us about the Organization">
           <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
+          <.input field={@form[:weight]} label="Weight" />
           <.input
             field={@form[:url]}
             label="Organization url"

@@ -4,6 +4,8 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
   alias BuiltWithPhoenix.Organizations.Resource.Organization
   alias BuiltWithPhoenix.Organizations.Resource.Technology
 
+  alias BuiltWithPhoenixWeb.Fetcher
+
   alias Phoenix.LiveView
 
   @impl LiveView
@@ -23,21 +25,32 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
           class="min-w-0 grid gap-y-8"
         >
           <.section title="Tell us about the Organization">
-            <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />
             <.input
               field={@form[:url]}
               label="Organization url"
               required
               placeholder="https://themykolas.com"
+              phx-debounce="200"
+            />
+            <.input
+              field={@form[:name]}
+              label="Organization name"
+              required
+              placeholder="The Mykolas"
+              phx-debounce="500"
             />
             <.input
               type="textarea"
               field={@form[:description]}
               label="Description"
               placeholder="A short description of what the organization does"
+              phx-debounce="500"
             />
             <.logo_input id="logo" value={@form[:logo].value} upload={@uploads.logo} />
+            <.input type="hidden" field={@form[:logo]} />
+
             <.image_input id="image" upload={@uploads.image} value={@form[:image].value} />
+            <.input type="hidden" field={@form[:image]} />
           </.section>
 
           <.section title="How do you know they use Phoenix Framework?">
@@ -47,6 +60,7 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
                 field={@form[:usage_public]}
                 label="Public"
                 placeholder="This information will be shared publicly"
+                phx-debounce="500"
               />
               <%!-- errors={["if this information can safely be shared publicly"]} --%>
               <.input
@@ -54,6 +68,7 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
                 field={@form[:usage_private]}
                 label="Private"
                 placeholder="This information will not be shared publicly"
+                phx-debounce="500"
               />
               <%!-- description="if this information cannot safely be shared publicly" --%>
             </div>
@@ -64,6 +79,7 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
               field={@form[:extra_sites]}
               label="Sites"
               placeholder="https://themykolas.com"
+              phx-debounce="500"
             />
           </.section>
 
@@ -71,8 +87,18 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
             <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
           </.section>
           <.section title="Tell us about yourself">
-            <.input field={@form[:author_name]} label="Your name" placeholder="Firstname Lastname" />
-            <.input field={@form[:author_email]} label="Your email" placeholder="you@awesome.com" />
+            <.input
+              field={@form[:author_name]}
+              label="Your name"
+              placeholder="Firstname Lastname"
+              phx-debounce="500"
+            />
+            <.input
+              field={@form[:author_email]}
+              label="Your email"
+              placeholder="you@awesome.com"
+              phx-debounce="500"
+            />
           </.section>
           <.button type="submit" phx-disable-with="Saving...">Suggest Organization</.button>
         </.form>
@@ -113,6 +139,18 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
     {:noreply, cancel_upload(socket, String.to_existing_atom(key), ref)}
   end
 
+  def handle_event(
+        "validate",
+        %{"_target" => ["organization", "url"], "organization" => organization_params},
+        socket
+      ) do
+    site_params = Fetcher.fetch_website_details(organization_params["url"])
+    organization_params = Map.merge(organization_params, site_params)
+
+    {:noreply,
+     assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, organization_params))}
+  end
+
   def handle_event("validate", %{"organization" => organization_params}, socket) do
     {:noreply,
      assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, organization_params))}
@@ -121,8 +159,8 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
   def handle_event("save", %{"organization" => organization_params}, socket) do
     organization_params =
       organization_params
-      |> Map.put("logo", get_file(socket, :logo))
-      |> Map.put("image", get_file(socket, :image))
+      |> add_file("logo", socket)
+      |> add_file("image", socket)
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: organization_params) do
       {:ok, organization} ->
@@ -150,11 +188,20 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
     {:ok, meta, socket}
   end
 
-  defp get_file(socket, upload_key) do
-    consume_uploaded_entries(socket, upload_key, fn _, entry ->
-      {:ok, S3Uploader.entry_url(entry)}
-    end)
-    |> List.first()
+  defp add_file(params, key, socket) do
+    if params[key] == "" do
+      upload_key = String.to_existing_atom(key)
+
+      value =
+        consume_uploaded_entries(socket, upload_key, fn _, entry ->
+          {:ok, S3Uploader.entry_url(entry)}
+        end)
+        |> List.first()
+
+      Map.put(params, key, value)
+    else
+      params
+    end
   end
 
   defp what_belongs_here(assigns) do

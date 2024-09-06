@@ -76,13 +76,18 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
     assign(socket, form: to_form(form))
   end
 
-  def active(nil), do: Organization.active!()
-  def active(""), do: Organization.active!()
+  def active_base do
+    Organization
+    |> Ash.Query.for_read(:active)
+    |> Ash.Query.sort(weight: :desc, name: :asc)
+  end
 
-  def active(technologies),
-    do:
-      Organization
-      |> Ash.Query.for_read(:active)
-      |> Ash.Query.filter(technologies.id in ^technologies)
-      |> Ash.read!()
+  def active(nil), do: active_base() |> Ash.read!()
+  def active(""), do: active_base() |> Ash.read!()
+
+  def active(technologies) do
+    active_base()
+    |> Ash.Query.filter(technologies.id in ^technologies)
+    |> Ash.read!()
+  end
 end
