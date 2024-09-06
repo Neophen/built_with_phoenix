@@ -34,7 +34,7 @@ defmodule BuiltWithPhoenixWeb.Router do
     # Leave out `register_path` and `reset_path` if you don't want to support
     # user registration and/or password resets respectively.
     sign_in_route(
-      register_path: "/register",
+      # register_path: "/register",
       # reset_path: "/reset",
       on_mount: [{LiveUserAuth, :live_no_user}]
     )
