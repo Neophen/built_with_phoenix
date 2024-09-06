@@ -83,6 +83,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
     do:
       Organization
       |> Ash.Query.for_read(:active)
+      |> Ash.Query.sort([:weight, :name])
       |> Ash.Query.filter(technologies.id in ^technologies)
       |> Ash.read!()
 end

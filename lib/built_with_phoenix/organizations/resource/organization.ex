@@ -32,6 +32,7 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
     attribute :extra_sites, :string, public?: true
     attribute :author_name, :string, public?: true
     attribute :author_email, :string, public?: true
+    attribute :weight, :integer, public?: true, default: 0
 
     attribute :status, BuiltWithPhoenix.Organizations.OrganizationStatus,
       public?: true,
