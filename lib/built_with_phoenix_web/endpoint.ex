@@ -11,7 +11,7 @@ defmodule BuiltWithPhoenixWeb.Endpoint do
     same_site: "Lax"
   ]
 
-  plug BuiltWithPhoenixWeb.Plugs.HeathCheck
+  plug BuiltWithPhoenixWeb.Plugs.HealthCheck
 
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],

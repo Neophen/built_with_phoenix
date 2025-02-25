@@ -1,4 +1,4 @@
-defmodule BuiltWithPhoenixWeb.Plugs.HeathCheck do
+defmodule BuiltWithPhoenixWeb.Plugs.HealthCheck do
   @behaviour Plug
 
   import Plug.Conn

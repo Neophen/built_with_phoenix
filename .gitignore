@@ -38,3 +38,4 @@ npm-debug.log
 config/dev.secrets.exs
 config/prod.secrets.exs
 config/test.secrets.exs
+.DS_Store
