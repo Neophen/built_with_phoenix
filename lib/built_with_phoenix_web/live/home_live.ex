@@ -18,7 +18,7 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
         for={@form}
         id="technologies-form"
         phx-change="change-technologies"
-        class="min-w-0 mx-auto w-max max-w-full"
+        class="mx-auto w-max min-w-0 max-w-full"
       >
         <.input type="checkgroup" field={@form[:technologies]} options={@technologies} />
       </.form>
@@ -85,9 +85,10 @@ defmodule BuiltWithPhoenixWeb.HomeLive do
   def active(nil), do: active_base() |> Ash.read!()
   def active(""), do: active_base() |> Ash.read!()
 
-  def active(technologies) do
-    active_base()
-    |> Ash.Query.filter(technologies.id in ^technologies)
+  def active(technologies) when is_list(technologies) do
+    Organization
+    |> Ash.Query.for_read(:active, %{technology_ids: technologies})
+    |> Ash.Query.sort(weight: :desc, name: :asc)
     |> Ash.read!()
   end
 end

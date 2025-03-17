@@ -25,7 +25,7 @@ defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Index do
             data-status={technology.status}
             class="status bg-[--status-bg] text-[--status-text] font-regular w-min rounded px-1 py-px text-xs uppercase leading-tight"
           >
-            <%= technology.status %>
+            {technology.status}
           </p>
         </div>
         <div class="flex items-center gap-4">
@@ -34,12 +34,12 @@ defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Index do
           </div>
 
           <p class="font-semibold">
-            <%= technology.name %>
+            {technology.name}
           </p>
         </div>
 
         <p class="truncate" title={technology.url}>
-          <%= technology.url %>
+          {technology.url}
         </p>
 
         <div class="flex gap-4">

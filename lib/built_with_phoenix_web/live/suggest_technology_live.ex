@@ -22,7 +22,7 @@ defmodule BuiltWithPhoenixWeb.SuggestTechnologyLive do
           id="technology-form"
           phx-change="validate"
           phx-submit="save"
-          class="min-w-0 max-h-min grid gap-y-8"
+          class="grid max-h-min min-w-0 gap-y-8"
         >
           <.section title="Tell us about the Organization">
             <.input field={@form[:name]} label="Organization name" required placeholder="The Mykolas" />

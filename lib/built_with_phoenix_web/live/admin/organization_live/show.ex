@@ -6,7 +6,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Show do
     ~H"""
     <div class="grid gap-8 p-8">
       <.header>
-        Organization <%= @organization.id %>
+        Organization {@organization.id}
         <:subtitle>This is a organization record from your database.</:subtitle>
 
         <:actions>
@@ -20,25 +20,25 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Show do
       </.header>
 
       <.list>
-        <:item title="Id"><%= @organization.id %></:item>
+        <:item title="Id">{@organization.id}</:item>
 
-        <:item title="Name"><%= @organization.name %></:item>
+        <:item title="Name">{@organization.name}</:item>
 
-        <:item title="Url"><%= @organization.url %></:item>
+        <:item title="Url">{@organization.url}</:item>
 
-        <:item title="Logo"><%= @organization.logo %></:item>
+        <:item title="Logo">{@organization.logo}</:item>
 
-        <:item title="Image"><%= @organization.image %></:item>
+        <:item title="Image">{@organization.image}</:item>
 
-        <:item title="Usage public"><%= @organization.usage_public %></:item>
+        <:item title="Usage public">{@organization.usage_public}</:item>
 
-        <:item title="Usage private"><%= @organization.usage_private %></:item>
+        <:item title="Usage private">{@organization.usage_private}</:item>
 
-        <:item title="Extra sites"><%= @organization.extra_sites %></:item>
+        <:item title="Extra sites">{@organization.extra_sites}</:item>
 
-        <:item title="Author name"><%= @organization.author_name %></:item>
+        <:item title="Author name">{@organization.author_name}</:item>
 
-        <:item title="Author email"><%= @organization.author_email %></:item>
+        <:item title="Author email">{@organization.author_email}</:item>
       </.list>
 
       <.back navigate={~p"/admin/organizations"}>Back to organizations</.back>

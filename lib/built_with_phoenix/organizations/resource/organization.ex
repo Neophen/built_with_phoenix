@@ -110,16 +110,18 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Organization do
     end
 
     read :active do
+      argument :technology_ids, {:array, :uuid_v7} do
+        allow_nil? true
+        default nil
+      end
+
       filter expr(status == :active)
+      filter expr(is_nil(^arg(:technology_ids)) or technologies.id in ^arg(:technology_ids))
     end
 
     read :by_id do
-      # This action has one argument :id of type :uuid
       argument :id, :uuid, allow_nil?: false
-      # Tells us we expect this action to return a single result
       get? true
-      # Filters the `:id` given in the argument
-      # against the `id` of each element in the resource
       filter expr(id == ^arg(:id))
     end
   end

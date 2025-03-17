@@ -12,23 +12,23 @@ defmodule BuiltWithPhoenixWeb.ShowOrganizationLive do
             <div class="rounded border bg-white p-2">
               <img class="h-12" src={imgproxy(@organization.logo, "h:48")} alt="" />
             </div>
-            <.text_header><%= @organization.name %></.text_header>
+            <.text_header>{@organization.name}</.text_header>
           </li>
           <li :if={@organization.description}>
             <.p class="text-pretty font-sans break-normal font-normal">
-              <%= @organization.description %>
+              {@organization.description}
             </.p>
           </li>
           <li>
             <.p>How do we know they use phoenix:</.p>
             <.p class="text-pretty font-sans break-normal font-semibold">
-              <%= @organization.usage_public %>
+              {@organization.usage_public}
             </.p>
           </li>
           <li>
             <.p>Extra Sites:</.p>
             <.p class="text-pretty font-sans break-normal font-semibold">
-              <%= @organization.extra_sites %>
+              {@organization.extra_sites}
             </.p>
           </li>
           <li class="pt-4">

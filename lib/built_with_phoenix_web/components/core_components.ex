@@ -37,7 +37,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     >
       <div class="flex h-8 shrink-0 items-center gap-4">
         <img src={imgproxy(@logo, "h:32")} class="h-full w-auto" />
-        <%= @name %>
+        {@name}
       </div>
       <div class="flex items-center overflow-clip border">
         <img
@@ -60,7 +60,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
             Built with phoenix
           </h2>
           <.p class="mx-auto mt-6 max-w-xl">
-            A curated catalog of organizations using Phoenix
+            A curated catalog of organizations using Elixir and Phoenix in production
           </.p>
           <div class="mt-8 flex flex-col flex-wrap items-center justify-center gap-2 sm:flex-row sm:gap-6">
             <.link
@@ -71,13 +71,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
             </.link>
             <.link
               navigate={~p"/suggest"}
-              class="whitespace-nowrap rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              class="bg-primary-600 whitespace-nowrap rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Suggest <span aria-hidden="true">→</span>
             </.link>
             <.link
               navigate={~p"/suggest-technology"}
-              class="whitespace-nowrap rounded-md bg-primary-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              class="bg-primary-300 whitespace-nowrap rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Suggest Technology <span aria-hidden="true">→</span>
             </.link>
@@ -94,10 +94,10 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <footer id="about" class="bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div :if={@user?} class="fixed top-0 right-0 flex flex-wrap gap-4 p-4">
-        <.link class="border rounded-md bg-orange-200 px-3 py-2" navigate={~p"/admin/technologies"}>
+        <.link class="rounded-md border bg-orange-200 px-3 py-2" navigate={~p"/admin/technologies"}>
           Technologies
         </.link>
-        <.link class="border rounded-md bg-orange-200 px-3 py-2" navigate={~p"/admin/organizations"}>
+        <.link class="rounded-md border bg-orange-200 px-3 py-2" navigate={~p"/admin/organizations"}>
           Organizations
         </.link>
       </div>
@@ -125,7 +125,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def p(assigns) do
     ~H"""
     <p class={["text-lg leading-8 text-gray-600", @class]}>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </p>
     """
   end
@@ -136,7 +136,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def text_header(assigns) do
     ~H"""
     <p class={["text-xl font-extrabold leading-7 text-zinc-800", @class]}>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </p>
     """
   end
@@ -148,7 +148,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <.section_header text={@title} />
 
-    <%= render_slot(@inner_block) %>
+    {render_slot(@inner_block)}
 
     <hr class="border-zinc-400" />
     """
@@ -159,7 +159,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def section_header(assigns) do
     ~H"""
     <h2 class="text-base font-semibold leading-7 text-zinc-800">
-      <%= @text %>
+      {@text}
     </h2>
     """
   end
@@ -320,10 +320,10 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <ul>
       <%= for entry <- @upload.entries do %>
-        <.error :for={err <- upload_errors(@upload, entry)}><%= error_to_string(err) %></.error>
+        <.error :for={err <- upload_errors(@upload, entry)}>{error_to_string(err)}</.error>
       <% end %>
 
-      <.error :for={err <- upload_errors(@upload)}><%= error_to_string(err) %></.error>
+      <.error :for={err <- upload_errors(@upload)}>{error_to_string(err)}</.error>
     </ul>
     """
   end
@@ -388,7 +388,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
                 </button>
               </div>
               <div id={"#{@id}-content"}>
-                <%= render_slot(@inner_block) %>
+                {render_slot(@inner_block)}
               </div>
             </.focus_wrap>
           </div>
@@ -433,9 +433,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
         <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
         <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        <%= @title %>
+        {@title}
       </p>
-      <p class="mt-2 text-sm leading-5"><%= msg %></p>
+      <p class="mt-2 text-sm leading-5">{msg}</p>
       <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
         <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
       </button>
@@ -466,7 +466,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         phx-connected={hide("#client-error")}
         hidden
       >
-        <%= gettext("Attempting to reconnect") %>
+        {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
       </.flash>
 
@@ -478,7 +478,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         phx-connected={hide("#server-error")}
         hidden
       >
-        <%= gettext("Hang in there while we get back on track") %>
+        {gettext("Hang in there while we get back on track")}
         <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
       </.flash>
     </div>
@@ -513,9 +513,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
       <div class="mt-10 space-y-8 bg-white">
-        <%= render_slot(@inner_block, f) %>
+        {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
-          <%= render_slot(action, f) %>
+          {render_slot(action, f)}
         </div>
       </div>
     </.form>
@@ -547,7 +547,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       ]}
       {@rest}
     >
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </button>
     """
   end
@@ -635,9 +635,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
           class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
           {@rest}
         />
-        <%= @label %>
+        {@label}
       </label>
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
@@ -645,7 +645,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id}>{@label}</.label>
       <select
         id={@id}
         name={@name}
@@ -653,10 +653,10 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         multiple={@multiple}
         {@rest}
       >
-        <option :if={@prompt} value=""><%= @prompt %></option>
-        <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
+        <option :if={@prompt} value="">{@prompt}</option>
+        {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
@@ -664,7 +664,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id}>{@label}</.label>
       <textarea
         id={@id}
         name={@name}
@@ -675,7 +675,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         ]}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
@@ -694,13 +694,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
 
     ~H"""
     <div class="text-sm">
-      <.label :if={@label}><%= @label %></.label>
+      <.label :if={@label}>{@label}</.label>
       <input type="hidden" name={@name} value="" />
       <ul class="duration-[--transition] gap-[1ch] mt-2 flex flex-wrap transition-all">
         <li :for={{label, value} <- @options} key={value}>
           <label for={"#{@name}-#{value}"} class="checkbox-label px-4 py-2">
             <span class="relative flex h-full items-center">
-              <%= label %>
+              {label}
             </span>
             <span class="relative flex h-full items-center">
               <svg
@@ -729,7 +729,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
           </label>
         </li>
       </ul>
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
@@ -738,7 +738,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div>
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id}>{@label}</.label>
       <input
         type={@type}
         name={@name}
@@ -751,7 +751,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         ]}
         {@rest}
       />
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
@@ -765,7 +765,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
   def label(assigns) do
     ~H"""
     <label for={@for} class="block text-sm font-medium leading-6 text-zinc-800">
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </label>
     """
   end
@@ -779,7 +779,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     ~H"""
     <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600">
       <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </p>
     """
   end
@@ -798,13 +798,13 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
       <div>
         <h1 class="text-lg font-semibold leading-8 text-zinc-800">
-          <%= render_slot(@inner_block) %>
+          {render_slot(@inner_block)}
         </h1>
         <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
-          <%= render_slot(@subtitle) %>
+          {render_slot(@subtitle)}
         </p>
       </div>
-      <div class="flex-none"><%= render_slot(@actions) %></div>
+      <div class="flex-none">{render_slot(@actions)}</div>
     </header>
     """
   end
@@ -846,9 +846,9 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
       <table class="w-[40rem] mt-11 sm:w-full">
         <thead class="text-left text-sm leading-6 text-zinc-500">
           <tr>
-            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
+            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal">{col[:label]}</th>
             <th :if={@action != []} class="relative p-0 pb-4">
-              <span class="sr-only"><%= gettext("Actions") %></span>
+              <span class="sr-only">{gettext("Actions")}</span>
             </th>
           </tr>
         </thead>
@@ -866,7 +866,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
               <div class="block py-4 pr-6">
                 <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
                 <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
-                  <%= render_slot(col, @row_item.(row)) %>
+                  {render_slot(col, @row_item.(row))}
                 </span>
               </div>
             </td>
@@ -877,7 +877,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
                   :for={action <- @action}
                   class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
                 >
-                  <%= render_slot(action, @row_item.(row)) %>
+                  {render_slot(action, @row_item.(row))}
                 </span>
               </div>
             </td>
@@ -907,8 +907,8 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
     <div class="mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
-          <dd class="text-zinc-700"><%= render_slot(item) %></dd>
+          <dt class="w-1/4 flex-none text-zinc-500">{item.title}</dt>
+          <dd class="text-zinc-700">{render_slot(item)}</dd>
         </div>
       </dl>
     </div>
@@ -933,7 +933,7 @@ defmodule BuiltWithPhoenixWeb.CoreComponents do
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </.link>
     </div>
     """

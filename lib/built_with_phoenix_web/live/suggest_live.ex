@@ -22,7 +22,7 @@ defmodule BuiltWithPhoenixWeb.SuggestLive do
           id="organization-form"
           phx-change="validate"
           phx-submit="save"
-          class="min-w-0 grid gap-y-8"
+          class="grid min-w-0 gap-y-8"
         >
           <.section title="Tell us about the Organization">
             <.input

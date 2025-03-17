@@ -14,7 +14,7 @@ defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.FormComponent do
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
-        class="min-w-0 grid gap-y-8"
+        class="grid min-w-0 gap-y-8"
       >
         <.section title="Tell us about the Technology">
           <.input field={@form[:name]} label="Technology name" required placeholder="The Mykolas" />

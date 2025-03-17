@@ -5,7 +5,7 @@ defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Show do
   def render(assigns) do
     ~H"""
     <.header>
-      Technology <%= @technology.id %>
+      Technology {@technology.id}
       <:subtitle>This is a technology record from your database.</:subtitle>
 
       <:actions>
@@ -16,13 +16,13 @@ defmodule BuiltWithPhoenixWeb.Admin.TechnologyLive.Show do
     </.header>
 
     <.list>
-      <:item title="Id"><%= @technology.id %></:item>
+      <:item title="Id">{@technology.id}</:item>
 
-      <:item title="Name"><%= @technology.name %></:item>
+      <:item title="Name">{@technology.name}</:item>
 
-      <:item title="Url"><%= @technology.url %></:item>
+      <:item title="Url">{@technology.url}</:item>
 
-      <:item title="Image url"><%= @technology.image_url %></:item>
+      <:item title="Image url">{@technology.image_url}</:item>
     </.list>
 
     <.back navigate={~p"/admin/technologies"}>Back to technologies</.back>

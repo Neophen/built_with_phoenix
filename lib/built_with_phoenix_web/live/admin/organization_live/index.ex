@@ -28,7 +28,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
               data-status={organization.status}
               class="status bg-[--status-bg] text-[--status-text] font-regular w-min rounded px-1 py-px text-xs uppercase leading-tight"
             >
-              <%= organization.status %>
+              {organization.status}
             </p>
           </div>
           <div class="flex items-center gap-4">
@@ -37,12 +37,12 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
             </div>
 
             <p class="font-semibold">
-              <%= organization.name %>
+              {organization.name}
             </p>
           </div>
 
           <p class="">
-            <%= organization.url %>
+            {organization.url}
           </p>
 
           <div class="flex gap-4">
@@ -150,7 +150,7 @@ defmodule BuiltWithPhoenixWeb.Admin.OrganizationLive.Index do
       socket,
       :organizations,
       Organization
-      |> Ash.Query.sort(:name)
+      |> Ash.Query.sort(weight: :desc, name: :asc)
       |> Ash.read!(actor: socket.assigns[:current_user])
     )
   end
