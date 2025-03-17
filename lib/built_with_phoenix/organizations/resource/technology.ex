@@ -41,8 +41,11 @@ defmodule BuiltWithPhoenix.Organizations.Resource.Technology do
   end
 
   calculations do
-    calculate :has_organizations, :boolean, expr(count(organizations.status == :active) > 0)
+    calculate :has_organizations, :boolean, expr(
+      count(organizations, query: [filter: expr(status == ^:active)]) > 0
+    )
   end
+
 
   actions do
     defaults [:read, :destroy]
